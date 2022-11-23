@@ -1,10 +1,10 @@
-Column name,Description,Non NA unique values,Type,Cleaning required,Cleaning Done,Percentage of rows with nulls,Whether we're likely to use,Notes
+Column name,Description,Non NA unique values,Data Abstraction,Cleaning required,Cleaning Done,Percentage of rows with nulls,Whether we're likely to use,Notes
 id,Unique identifier for property,-,Categorical,No,Y,0,Yes,Likely only for counts
 name,Description of property,-,Categorical,If use will need to remove stopwords,N,0.24,Maybe,For looking at frequent descriptions of neighbourhoods
 host_id,Unique identifier for host,-,Categorical,Maybe,N,0,Yes,"One host ID seems to have two names, should they be split?"
 host_identity_verified,"Categorical, whether the hosts identity has been checked","'unconfirmed', 'verified'",Categorical,No,Y,0.28,No,"To discuss, we could replace NA with unconfirmed here"
 host_name,Name for host,-,Categorical,No,Y,0.4,No,"Definitely ethical issues if we use it (some people have their & partners name, or their full name)"
-neighbourhood_group,Neighbourhood group name,"Brooklyn', 'Manhattan', 'Queens','Staten Island', 'Bronx'",Categorical,"Yes, fixed incorrect names and joined on neighbourhood to fill nulls in column",Y,0,Yes,
+neighbourhood_group,Neighbourhood group name,"Brooklyn', 'Manhattan', 'Queens','Staten Island', 'Bronx'","Categorical, hierarchical with neighbourhood","Yes, fixed incorrect names and joined on neighbourhood to fill nulls in column",Y,0,Yes,
 neighbourhood,Neighbourhood name,"Kensington', 'Midtown', 'Harlem', 'Clinton Hill', 'East Harlem',
        'Murray Hill', 'Bedford-Stuyvesant', ""Hell's Kitchen"",
        'Upper West Side', 'Chinatown', 'South Slope', 'West Village',
@@ -62,9 +62,9 @@ neighbourhood,Neighbourhood name,"Kensington', 'Midtown', 'Harlem', 'Clinton Hil
        'Fort Wadsworth', 'Rosebank', 'Unionport', 'Mill Basin',
        'Arden Heights', ""Bull's Head"", 'New Dorp', 'Rossville',
        'Breezy Point', 'Willowbrook', 'Glen Oaks', 'Gerritsen Beach',
-       'Chelsea, Staten Island'",Categorical,Maybe,N,0.03,Yes,Could fill nulls manually or extract from name
-lat,latitude coordinate,-,"Quantitative, sequential?",No,Y,0.01,Yes,Could search for locations and manually fill nulls
-long,longitude coordinate,-,"Quantitative, sequential?",No,Y,0.01,Yes,Could search for locations and manually fill nulls
+       'Chelsea, Staten Island'","Categorical, hierarchical with neighbourhood group",Maybe,N,0.03,Yes,Could fill nulls manually or extract from name
+lat,latitude coordinate,-,"Quantitative, sequential? Position",No,Y,0.01,Yes,Could search for locations and manually fill nulls
+long,longitude coordinate,-,"Quantitative, sequential? Position",No,Y,0.01,Yes,Could search for locations and manually fill nulls
 instant_bookable,Whether the guest can automatically book the listing without the host requiring to accept their booking request. An indicator of a commercial listing.,"True, False","Categorical, boolean",No,Y,0.1,Maybe,Look into how to use for commercial listing
 cancellation_policy,How strict the cancellation policy,"strict', 'moderate', 'flexible'",Categorical,"Yes, set as category",Y,0.08,No,Could use mode? Or mark unknown
 room_type,Type of property offered,"Private room', 'Entire home/apt', 'Shared room', 'Hotel room'",Categorical,"Yes, set as category",Y,0,Yes,
