@@ -2,3 +2,4 @@
 - Match zip code to longitude and latitude https://gist.github.com/erichurst/7882666
 - Match zip code to neighbourhood https://github.com/erikgregorywebb/nyc-housing/blob/master/Data/nyc-zip-codes.csv
 - Noise complaints  https://data.cityofnewyork.us/widgets/p5f6-bkga?mobile_redirect=true (dataset filtered to 10/21-10/22 and to only residential complaints/ relevant columns)
+- https://data.cityofnewyork.us/City-Government/Hotels-Properties-Citywide/tjus-cn27
