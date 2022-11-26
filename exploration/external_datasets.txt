@@ -3,3 +3,21 @@
 - Match zip code to neighbourhood https://github.com/erikgregorywebb/nyc-housing/blob/master/Data/nyc-zip-codes.csv
 - Noise complaints  https://data.cityofnewyork.us/widgets/p5f6-bkga?mobile_redirect=true (dataset filtered to 10/21-10/22 and to only residential complaints/ relevant columns)
 - https://data.cityofnewyork.us/City-Government/Hotels-Properties-Citywide/tjus-cn27
+
+For the rental properties in NYC
+(Public)
+Condo: https://data.cityofnewyork.us/City-Government/DOF-Condominium-Comparable-Rental-Income-in-NYC/9ck6-2jew
+
+census.gov (but only 2017): https://www.census.gov/data-tools/demo/nychvs/#/?s_tableName=TABLE6&s_byGroup1=3
+Or this: https://www.census.gov/programs-surveys/nychvs.html
+
+nyc.gov (not divided by boroughs so useless): https://www.nyc.gov/site/hpd/about/research.page
+
+(Private companies)
+Zillow: https://www.zillow.com/research/data/
+
+Apartment list: https://www.apartmentlist.com/research/category/data-rent-estimates
+
+Streeteasy: https://streeteasy.com/blog/data-dashboard/?agg=Total&metric=Inventory&type=Rentals&bedrooms=Any%20Bedrooms&property=Any%20Property%20Type&minDate=2010-01-01&maxDate=2022-10-01&area=Flatiron,Brooklyn%20Heights
+
+Elliman report: https://www.elliman.com/corporate-resources/market-reports
