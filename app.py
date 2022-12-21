@@ -2,57 +2,81 @@ from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 
-from dash import html
 import plotly.express as px
+import plotly.graph_objects as go
+
+from dash import html
 from dash.dependencies import Input, Output
+from dash import dcc
+
+from wordcloud import WordCloud 
+
+# tmp data
+import geopandas as gpd
 
 
 if __name__ == '__main__':
+
     # Create data
     df = px.data.iris()
+    long_df = px.data.medals_long()
+    geo_df = gpd.read_file(gpd.datasets.get_path('naturalearth_cities'))
 
-    # Instantiate custom views
-    scatterplot1 = Scatterplot("Scatterplot 1", 'sepal_length', 'sepal_width', df)
-    scatterplot2 = Scatterplot("Scatterplot 2", 'petal_length', 'petal_width', df)
+    # Create the plots
+    scatter = px.scatter(df, x='sepal_length', y='sepal_width')
 
-    app.layout = html.Div(
-        id="app-container",
-        children=[
-            # Left column
-            html.Div(
-                id="left-column",
-                className="three columns",
-                children=make_menu_layout()
-            ),
+    vbarchart = px.bar(long_df, x="nation", y="count", color="medal", title="Long-Form Input")
 
-            # Right column
-            html.Div(
-                id="right-column",
-                className="nine columns",
-                children=[
-                    scatterplot1,
-                    scatterplot2
-                ],
-            ),
-        ],
+    hbarchart = px.bar(long_df, x="count", y="nation", color='medal', orientation='h')
+
+    scattermap = px.scatter_mapbox(geo_df,
+                        lat=geo_df.geometry.y, # center latitude
+                        lon=geo_df.geometry.x, # center longitude
+                        hover_name="name",
+                        zoom=1,)
+    scattermap.update_layout(mapbox_style="open-street-map") # Needed to avoid paying for mapbox
+    scattermap.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+
+    wc = WordCloud().generate("aaaaa bbbbb ccccc")
+    wcfig = go.Figure().add_trace(go.Image(z=wc))
+    wcfig.update_layout(
+        height=400,
+        xaxis={"visible": False},
+        yaxis={"visible": False},
+        margin={"t": 0, "b": 0, "l": 0, "r": 0},
     )
 
-    # Define interactions
-    @app.callback(
-        Output(scatterplot1.html_id, "figure"), [
-        Input("select-color-scatter-1", "value"),
-        Input(scatterplot2.html_id, 'selectedData')
-    ])
-    def update_scatter_1(selected_color, selected_data):
-        return scatterplot1.update(selected_color, selected_data)
+    #Create the layout
+    app.layout = html.Div(
+        id="container",
+        children=[
+            html.Section(
+                className = "card",
+                children=[dcc.Graph(figure=scatter)]
+            ),
+            html.Section(
+                className = "card",
+                
+            ),
+            html.Section(
+                className = "card",
+                children=[dcc.Graph(figure=vbarchart)]
+            ),
+            html.Section(
+                className = "card",
+                children=[dcc.Graph(figure=wcfig,config={"displayModeBar": False})]
+            ),
+            html.Section(
+                className = "card",
+                children=[dcc.Graph(figure=scattermap)]
+            ),
+            html.Section(
+                className = "card a6",
+                children=[dcc.Graph(figure=hbarchart)]
+            )
+        ]
+    )
 
-    @app.callback(
-        Output(scatterplot2.html_id, "figure"), [
-        Input("select-color-scatter-2", "value"),
-        Input(scatterplot1.html_id, 'selectedData')
-    ])
-    def update_scatter_2(selected_color, selected_data):
-        return scatterplot2.update(selected_color, selected_data)
 
 
     app.run_server(debug=False, dev_tools_ui=False)

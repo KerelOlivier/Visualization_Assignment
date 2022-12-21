@@ -1,0 +1,6 @@
+.card{
+  background-color: #212121;
+  border-radius: 10px;
+  margin: 10px;
+  filter: drop-shadow(0 0 .5rem #080808)
+}
