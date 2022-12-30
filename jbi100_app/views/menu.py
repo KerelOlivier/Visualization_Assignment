@@ -7,10 +7,13 @@ import os
 # Load data
 APP_PATH = str(pathlib.Path(__file__).parent.parent.parent.resolve())
 
-df = pd.read_csv(
-    os.path.join(APP_PATH, os.path.join("data", "neighbourhoods.csv"))
+df = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "neighbourhoods.csv")))
+neighbourhood_list = (
+    ["All"]
+    + sorted(df.neighbourhood_group.unique().tolist())
+    + sorted(df.neighbourhood.unique().tolist())
 )
-neighbourhood_list = ['All'] + sorted(df.neighbourhood_group.unique().tolist()) + sorted(df.neighbourhood.unique().tolist())
+
 
 def generate_description_card():
     """
@@ -54,13 +57,10 @@ def generate_control_card():
             html.Label("Enter your zip code to find your neighbourhood:"),
             dcc.Input(
                 id="zip_code_text",
-                type='text',
-                placeholder='i.e. 10460',
+                type="text",
+                placeholder="i.e. 10460",
             ),
-            html.Div(
-                id='error',
-                style={"color": "red"}
-            ),
+            html.Div(id="error", style={"color": "red"}),
             html.Br(),
             html.Label("Select a neighbourhood group or neighbourhood:"),
             dcc.Dropdown(
@@ -68,7 +68,8 @@ def generate_control_card():
                 options=[{"label": i, "value": i} for i in neighbourhood_list],
                 value=neighbourhood_list[0],
             ),
-        ], style={"textAlign": "float-left"}
+        ],
+        style={"textAlign": "float-left"},
     )
 
 
