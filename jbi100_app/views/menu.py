@@ -1,6 +1,16 @@
 from dash import dcc, html
 from ..config import color_list1, color_list2
+import pandas as pd
+import pathlib
+import os
 
+# Load data
+APP_PATH = str(pathlib.Path(__file__).parent.parent.parent.resolve())
+
+df = pd.read_csv(
+    os.path.join(APP_PATH, os.path.join("data", "neighbourhoods.csv"))
+)
+neighbourhood_list = ['All'] + sorted(df.neighbourhood_group.unique().tolist()) + sorted(df.neighbourhood.unique().tolist())
 
 def generate_description_card():
     """
@@ -39,6 +49,24 @@ def generate_control_card():
                 id="select-color-scatter-2",
                 options=[{"label": i, "value": i} for i in color_list2],
                 value=color_list2[0],
+            ),
+            html.Br(),
+            html.Label("Enter your zip code to find your neighbourhood:"),
+            dcc.Input(
+                id="zip_code_text",
+                type='text',
+                placeholder='i.e. 10460',
+            ),
+            html.Div(
+                id='error',
+                style={"color": "red"}
+            ),
+            html.Br(),
+            html.Label("Select a neighbourhood group or neighbourhood:"),
+            dcc.Dropdown(
+                id="select_neigh",
+                options=[{"label": i, "value": i} for i in neighbourhood_list],
+                value=neighbourhood_list[0],
             ),
         ], style={"textAlign": "float-left"}
     )

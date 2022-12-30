@@ -6,6 +6,9 @@ from dash import html
 import plotly.express as px
 from dash.dependencies import Input, Output
 
+import pathlib
+import os
+import pandas as pd
 
 if __name__ == '__main__':
     # Create data
@@ -18,6 +21,12 @@ if __name__ == '__main__':
     app.layout = html.Div(
         id="app-container",
         children=[
+            html.Div(
+            id="header",
+            children= [
+                html.H4(id='header_title', children="Airbnb in New York"),
+                ],
+            ),
             # Left column
             html.Div(
                 id="left-column",
@@ -54,5 +63,40 @@ if __name__ == '__main__':
     def update_scatter_2(selected_color, selected_data):
         return scatterplot2.update(selected_color, selected_data)
 
+    # Update title based on drop down
+    @app.callback(
+        Output("header_title", "children"),
+        Input("select_neigh", "value")
+    )
+    def change_header(select_name):
+        if select_name != 'All':
+            return "Airbnb in New York: " + select_name
+        else:
+            return "Airbnb in New York"
+
+    
+    # Update title based on zip code
+    @app.callback(
+        Output("error", "children"),
+        Input("zip_code_text", "value"),
+    )
+    def check_zip_code(value):
+        if (not value.isdigit()) or (len(value) != 5): 
+            return "The value entered is not a valid zip code."
+        else:
+            #Load data
+            APP_PATH = str(pathlib.Path(__file__).parent.resolve())
+            df = pd.read_csv(
+                os.path.join(APP_PATH, os.path.join("data", "neighbourhoods.csv")), dtype=str
+            )
+
+            # Get first neighbourhood with zipcode
+            df_filter = df[df.zipcode == value]
+            if df_filter.empty:
+                return "The value entered does not correspond to a New York neighbourhood."
+            else:
+                neighbourhood = df_filter[['neighbourhood']].iloc[0][0]
+                return None
+            
 
     app.run_server(debug=False, dev_tools_ui=False)
