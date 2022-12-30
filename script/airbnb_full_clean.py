@@ -20,6 +20,9 @@ df["calculated_host_listings_count"] = df["calculated_host_listings_count"].asty
     "Int64"
 )
 
+# Clean neighbourhood
+df["neighbourhood"] = np.where(df['neighbourhood']=='Chelsea, Staten Island', 'Chelsea', df['neighbourhood'])
+
 # Creating neighbourhood counts
 df_group_neighbourhood = df.groupby(['host_id','neighbourhood'], as_index=False).size()
 df_group_neighbourhood.rename(columns={'size': 'host_listings_neighbourhood_count'}, inplace=True)
