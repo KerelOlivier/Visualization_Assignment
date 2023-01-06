@@ -21,6 +21,9 @@ if __name__ == "__main__":
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
     scatterplot2 = Scatterplot("Scatterplot 2", "petal_length", "petal_width", df)
+    scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
+    scatterplot4 = Scatterplot("Scatterplot 4", "petal_length", "petal_width", df)
+
     histogram = Histogram("Histogram", "host_listings_neighbourhood_count", df2)
 
     app.layout = html.Div(
@@ -32,15 +35,14 @@ if __name__ == "__main__":
                     html.H4(id="header_title", children="Airbnb in New York"),
                 ],
             ),
-            # Left column
+
+            # graphs
             html.Div(
-                id="left-column", className="three columns", children=make_menu_layout()
-            ),
-            # Right column
-            html.Div(
-                id="right-column",
+                id="graph-grid",
                 className="nine columns",
-                children=[scatterplot1, scatterplot2, histogram],
+                children=[scatterplot1,
+                    html.Div( id="settings", className="three columns", children=make_menu_layout()),
+                        scatterplot2, histogram, scatterplot3, scatterplot4],
             ),
         ],
     )

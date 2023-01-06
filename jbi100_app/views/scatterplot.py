@@ -8,7 +8,6 @@ class Scatterplot(html.Div):
         self.df = df
         self.feature_x = feature_x
         self.feature_y = feature_y
-
         # Equivalent to `html.Div([...])`
         super().__init__(
             className="graph_card",
@@ -17,6 +16,8 @@ class Scatterplot(html.Div):
                 dcc.Graph(id=self.html_id)
             ],
         )
+        
+        
 
     def update(self, selected_color, selected_data):
         self.fig = go.Figure()
@@ -33,11 +34,12 @@ class Scatterplot(html.Div):
         self.fig.update_layout(
             yaxis_zeroline=False,
             xaxis_zeroline=False,
-            dragmode='select'
+            dragmode='select',
+            paper_bgcolor="#212121",
+            plot_bgcolor="#212121",
         )
-        self.fig.update_xaxes(fixedrange=True)
-        self.fig.update_yaxes(fixedrange=True)
-
+        self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
+        self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
         # highlight points with selection other graph
         if selected_data is None:
             selected_index = self.df.index  # show all

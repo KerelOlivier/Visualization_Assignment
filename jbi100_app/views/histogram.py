@@ -33,8 +33,8 @@ class Histogram(html.Div):
             histfunc="count",
             x=values
         ))
-        self.fig.update_xaxes(fixedrange=True)
-        self.fig.update_yaxes(fixedrange=True)
+        self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
+        self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
 
         # highlight points with selection other graph
         # if selected_data is None:
@@ -48,7 +48,9 @@ class Histogram(html.Div):
         # update axis titles
         self.fig.update_layout(
             xaxis_title=self.feature,
-            yaxis_title='Count'
+            yaxis_title='Count',
+            paper_bgcolor="#212121",
+            plot_bgcolor="#212121",
         )
 
         return self.fig
