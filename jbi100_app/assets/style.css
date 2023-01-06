@@ -27,7 +27,9 @@ body {
     margin: 0;
 }
 
-
+.Select-menu-outer *{
+    color: #121212;
+}
 
 
 h5 {
