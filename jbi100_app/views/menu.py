@@ -25,8 +25,7 @@ def generate_description_card():
         children=[
             html.H5("Example dashboard"),
             html.Div(
-                id="intro",
-                children="You can use this as a basic template for your JBI100 visualization project.",
+                id="intro"
             ),
         ],
     )
@@ -67,6 +66,17 @@ def generate_control_card():
                 id="select_neigh",
                 options=[{"label": i, "value": i} for i in neighbourhood_list],
                 value=neighbourhood_list[0],
+            ),
+            html.Label("Select a view of the map:"),
+            dcc.RadioItems(
+                id="map_view",
+                options=[
+                    {'label': 'Fire alarms', 'value': 0},
+                    {'label': 'Carbon monoxide monitors', 'value': 1},
+                    {'label': 'Noise complaints', 'value': 2},
+                ],
+                value=0
+
             ),
         ],
         style={"textAlign": "float-left"},
