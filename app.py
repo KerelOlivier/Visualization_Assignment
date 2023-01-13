@@ -16,7 +16,9 @@ if __name__ == "__main__":
     df = px.data.iris()
     APP_PATH = str(pathlib.Path(__file__).parent.resolve())
 
-    df2 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv")))
+    df2 = pd.read_csv(
+        os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv"))
+    )
 
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
@@ -24,7 +26,11 @@ if __name__ == "__main__":
     scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
     scatterplot4 = Scatterplot("Scatterplot 4", "petal_length", "petal_width", df)
 
-    histogram = Histogram("Histogram", "host_listings_neighbourhood_count", df2)
+    histogram = Histogram(
+        "Distribution of number of Airbnbs owned by individual owners in selected area",
+        "host_listings_neighbourhood_count",
+        df2,
+    )
 
     app.layout = html.Div(
         id="app-container",
@@ -35,14 +41,22 @@ if __name__ == "__main__":
                     html.H4(id="header_title", children="Airbnb in New York"),
                 ],
             ),
-
             # graphs
             html.Div(
                 id="graph-grid",
                 className="nine columns",
-                children=[scatterplot1,
-                    html.Div( id="settings", className="three columns", children=make_menu_layout()),
-                        scatterplot2, histogram, scatterplot3, scatterplot4],
+                children=[
+                    scatterplot1,
+                    html.Div(
+                        id="settings",
+                        className="three columns",
+                        children=make_menu_layout(),
+                    ),
+                    histogram,
+                    scatterplot2,
+                    scatterplot3,
+                    scatterplot4,
+                ],
             ),
         ],
     )
@@ -68,7 +82,6 @@ if __name__ == "__main__":
     def update_scatter_2(selected_color, selected_data):
         return scatterplot2.update(selected_color, selected_data)
 
-
     # Update title based on drop down
     @app.callback(
         [
@@ -78,22 +91,22 @@ if __name__ == "__main__":
             Output(histogram.html_id, "figure")
         ],
         [
-            Input("select_neigh", "value"), 
-            Input("zip_code_text", "value")
+            Input("select_neigh", "value"),
+            Input("zip_code_text", "value"),
+            Input("local_switch", "on"),
         ],
-        [
-            State("header_title", "children"),
-            State(histogram.html_id, "figure")
-        ],
+        [State("header_title", "children"), State(histogram.html_id, "figure")],
     )
-    def update_neighbourhoods(select_name, zip_code_text, header_state, histogram_current):
+    def update_neighbourhoods(
+        select_name, zip_code_text, local_switch, header_state, histogram_current
+    ):
         if zip_code_text is not None:
             if (not zip_code_text.isdigit()) or (len(zip_code_text) != 5):
                 return (
                     header_state,
                     "The value entered is not a valid zip code.",
                     zip_code_text,
-                    histogram_current
+                    histogram_current,
                 )
             else:
                 # Load data
@@ -110,14 +123,29 @@ if __name__ == "__main__":
                         header_state,
                         "The value entered does not correspond to a New York neighbourhood.",
                         zip_code_text,
-                        histogram_current
+                        histogram_current,
                     )
                 else:
                     neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
-                    return "Airbnb in New York: " + neighbourhood, None, "", histogram.update(neighbourhood)
+                    return (
+                        "Airbnb in New York: " + neighbourhood,
+                        None,
+                        "",
+                        histogram.update(neighbourhood, local_switch),
+                    )
         elif select_name != "All":
-            return "Airbnb in New York: " + select_name, None, None, histogram.update(select_name) 
+            return (
+                "Airbnb in New York: " + select_name,
+                None,
+                None,
+                histogram.update(select_name, local_switch),
+            )
         else:
-            return "Airbnb in New York", None, None, histogram.update()
+            return (
+                "Airbnb in New York",
+                None,
+                None,
+                histogram.update(None, local_switch),
+            )
 
     app.run_server(debug=False, dev_tools_ui=False)
