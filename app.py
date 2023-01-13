@@ -2,6 +2,7 @@ from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
+from jbi100_app.views.horizontal_bar import HorizontalBar
 
 from dash import html
 import plotly.express as px
@@ -32,6 +33,12 @@ if __name__ == "__main__":
         df2,
     )
 
+    horizontal_bar = HorizontalBar(
+        "Number of properties per owner",
+        "host_listings_neighbourhood_count",
+        df2,
+    )
+
     app.layout = html.Div(
         id="app-container",
         children=[
@@ -55,7 +62,7 @@ if __name__ == "__main__":
                     histogram,
                     scatterplot2,
                     scatterplot3,
-                    scatterplot4,
+                    horizontal_bar,
                 ],
             ),
         ],
@@ -88,7 +95,8 @@ if __name__ == "__main__":
             Output("header_title", "children"),
             Output("error", "children"),
             Output("zip_code_text", "value"),
-            Output(histogram.html_id, "figure")
+            Output(histogram.html_id, "figure"),
+            Output(horizontal_bar.html_id, "figure"),
         ],
         [
             Input("select_neigh", "value"),
@@ -132,6 +140,7 @@ if __name__ == "__main__":
                         None,
                         "",
                         histogram.update(neighbourhood, local_switch),
+                        horizontal_bar.update(None),
                     )
         elif select_name != "All":
             return (
@@ -139,6 +148,7 @@ if __name__ == "__main__":
                 None,
                 None,
                 histogram.update(select_name, local_switch),
+                horizontal_bar.update(None),
             )
         else:
             return (
@@ -146,6 +156,7 @@ if __name__ == "__main__":
                 None,
                 None,
                 histogram.update(None, local_switch),
+                horizontal_bar.update(None),
             )
 
     app.run_server(debug=False, dev_tools_ui=False)
