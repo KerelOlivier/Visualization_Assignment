@@ -63,6 +63,7 @@ class HorizontalBar(html.Div):
                     hovertemplate="%{y} owns %{x} properties in the local area, and %{customdata} in total in NY.<extra></extra>",
                 )
             )
+            filter = filter[filter.diff_number > 0]
             self.fig.add_trace(
                 go.Bar(
                     y=filter["host_name"],
