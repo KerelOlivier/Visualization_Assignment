@@ -2,7 +2,7 @@ from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
-from jbi100_app.views.map import Map
+from jbi100_app.views.horizontal_bar import HorizontalBar
 
 from dash import html
 import plotly.express as px
@@ -17,7 +17,9 @@ if __name__ == "__main__":
     df = px.data.iris()
     APP_PATH = str(pathlib.Path(__file__).parent.resolve())
 
-    df2 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv")))
+    df2 = pd.read_csv(
+        os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv"))
+    )
 
     mode = 0
 
@@ -27,7 +29,17 @@ if __name__ == "__main__":
     scattermap = Map("Map 1", df2)
     scatterplot4 = Scatterplot("Scatterplot 4", "petal_length", "petal_width", df)
 
-    histogram = Histogram("Histogram", "host_listings_neighbourhood_count", df2)
+    histogram = Histogram(
+        "Distribution of number of Airbnbs owned by individual owners in selected area",
+        "host_listings_neighbourhood_count",
+        df2,
+    )
+
+    horizontal_bar = HorizontalBar(
+        "Number of properties per owner",
+        "host_listings_neighbourhood_count",
+        df2,
+    )
 
     app.layout = html.Div(
         id="app-container",
@@ -38,14 +50,22 @@ if __name__ == "__main__":
                     html.H4(id="header_title", children="Airbnb in New York"),
                 ],
             ),
-
             # graphs
             html.Div(
                 id="graph-grid",
                 className="nine columns",
-                children=[scatterplot1,
-                    html.Div( id="settings", className="three columns", children=make_menu_layout()),
-                        scatterplot2, histogram, scattermap, scatterplot4],
+                children=[
+                    scatterplot1,
+                    html.Div(
+                        id="settings",
+                        className="three columns",
+                        children=make_menu_layout(),
+                    ),
+                    histogram,
+                    scatterplot2,
+                    scatterplot3,
+                    horizontal_bar,
+                ],
             ),
         ],
     )
@@ -71,7 +91,6 @@ if __name__ == "__main__":
     def update_scatter_2(selected_color, selected_data):
         return scatterplot2.update(selected_color, selected_data)
 
-
     # Update title based on drop down
     @app.callback(
         [
@@ -79,30 +98,18 @@ if __name__ == "__main__":
             Output("error", "children"),
             Output("zip_code_text", "value"),
             Output(histogram.html_id, "figure"),
-            Output(scattermap.html_id, "figure"),
-            Output("map_title", "children")
+            Output(horizontal_bar.html_id, "figure"),
         ],
         [
-            Input("select_neigh", "value"), 
+            Input("select_neigh", "value"),
             Input("zip_code_text", "value"),
-            Input("map_view", "value")
+            Input("local_switch", "on"),
         ],
-        [
-            State("header_title", "children"),
-            State(histogram.html_id, "figure"),
-            State(scattermap.html_id, "figure"),
-            State("map_title", "children")
-        ],
+        [State("header_title", "children"), State(histogram.html_id, "figure")],
     )
-    def update_neighbourhoods(select_name, zip_code_text, map_view, header_state, histogram_current, scattermap_current, map_state):
-        map_title = map_state
-        if map_view == 0:
-            map_title = "Fire alarms"
-        elif map_view == 1:
-            map_title = "Carbon monoxide monitors"
-        elif map_view == 2:
-            map_title = "Noise complaints"
-
+    def update_neighbourhoods(
+        select_name, zip_code_text, local_switch, header_state, histogram_current
+    ):
         if zip_code_text is not None:
             if (not zip_code_text.isdigit()) or (len(zip_code_text) != 5):
                 return (
@@ -110,8 +117,6 @@ if __name__ == "__main__":
                     "The value entered is not a valid zip code.",
                     zip_code_text,
                     histogram_current,
-                    scattermap_current,
-                    map_title
                 )
             else:
                 # Load data
@@ -129,24 +134,31 @@ if __name__ == "__main__":
                         "The value entered does not correspond to a New York neighbourhood.",
                         zip_code_text,
                         histogram_current,
-                        scattermap_current,
-                        map_title
                     )
                 else:
                     neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
-                    return "Airbnb in New York: " + neighbourhood, None, "", histogram.update(neighbourhood), scattermap.update(map_view, neighbourhood=neighbourhood), map_title
+                    return (
+                        "Airbnb in New York: " + neighbourhood,
+                        None,
+                        "",
+                        histogram.update(neighbourhood, local_switch),
+                        horizontal_bar.update(None),
+                    )
         elif select_name != "All":
-            return "Airbnb in New York: " + select_name, None, None, histogram.update(select_name), scattermap.update(map_view, neighbourhood=select_name) , map_title
+            return (
+                "Airbnb in New York: " + select_name,
+                None,
+                None,
+                histogram.update(select_name, local_switch),
+                horizontal_bar.update(None),
+            )
         else:
-            return "Airbnb in New York", None, None, histogram.update(), scattermap.update(map_view), map_title
-
-    # @app.callback(
-    #     Output(scattermap.html_id, "figure"),
-    #     [
-    #         Input("map_view", "value")
-    #     ]
-    # )
-    # def update_map_view(map_value):
-    #     return scattermap.update(True)
+            return (
+                "Airbnb in New York",
+                None,
+                None,
+                histogram.update(None, local_switch),
+                horizontal_bar.update(None),
+            )
 
     app.run_server(debug=False, dev_tools_ui=False)
