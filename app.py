@@ -3,10 +3,13 @@ from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
 from jbi100_app.views.horizontal_bar import HorizontalBar
+from jbi100_app.views.word_cloud import WordsCloud
 
 from dash import html
 import plotly.express as px
 from dash.dependencies import Input, Output, State
+from io import BytesIO
+import base64
 
 import pathlib
 import os
@@ -24,8 +27,8 @@ if __name__ == "__main__":
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
     scatterplot2 = Scatterplot("Scatterplot 2", "petal_length", "petal_width", df)
-    scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
-    scatterplot4 = Scatterplot("Scatterplot 4", "petal_length", "petal_width", df)
+    #scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
+    wordcloud = WordsCloud("wordcloud", df2)
 
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",
@@ -61,7 +64,7 @@ if __name__ == "__main__":
                     ),
                     histogram,
                     scatterplot2,
-                    scatterplot3,
+                    wordcloud,
                     horizontal_bar,
                 ],
             ),
@@ -73,7 +76,7 @@ if __name__ == "__main__":
         Output(scatterplot1.html_id, "figure"),
         [
             Input("select-color-scatter-1", "value"),
-            Input(scatterplot2.html_id, "selectedData"),
+            Input(scatterplot1.html_id, "selectedData"),
         ],
     )
     def update_scatter_1(selected_color, selected_data):
@@ -83,11 +86,21 @@ if __name__ == "__main__":
         Output(scatterplot2.html_id, "figure"),
         [
             Input("select-color-scatter-2", "value"),
-            Input(scatterplot1.html_id, "selectedData"),
+            Input(scatterplot2.html_id, "selectedData"),
         ],
     )
     def update_scatter_2(selected_color, selected_data):
         return scatterplot2.update(selected_color, selected_data)
+
+    @app.callback(
+        Output(wordcloud.html_id, "src"),
+        Input(wordcloud.html_id, "id")
+    )
+    def update_wc(id):
+        img = BytesIO()
+        wordcloud.update().save(img, format="PNG")
+        return 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
+
 
     # Update title based on drop down
     @app.callback(
