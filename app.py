@@ -6,6 +6,7 @@ from jbi100_app.views.horizontal_bar import HorizontalBar
 from jbi100_app.views.word_cloud import WordsCloud
 from jbi100_app.views.map import Map
 
+import dash
 from dash import html
 import plotly.express as px
 from dash.dependencies import Input, Output, State
@@ -39,6 +40,12 @@ if __name__ == "__main__":
         df2,
     )
 
+    menu =  html.Div(
+                        id="settings",
+                        className="three columns",
+                        children=make_menu_layout(),
+                    )
+
     horizontal_bar = HorizontalBar(
         "Number of properties per owner",
         "host_listings_neighbourhood_count",
@@ -60,11 +67,7 @@ if __name__ == "__main__":
                 className="nine columns",
                 children=[
                     scatterplot1,
-                    html.Div(
-                        id="settings",
-                        className="three columns",
-                        children=make_menu_layout(),
-                    ),
+                    menu,
                     histogram,
                     wordcloud,
                     scattermap,
@@ -85,19 +88,6 @@ if __name__ == "__main__":
     def update_scatter_1(selected_color, selected_data):
         return scatterplot1.update(selected_color, selected_data)
 
-    @app.callback(
-        [
-            Output(scattermap.html_id, "figure"),
-            Output("map_title", "children")
-        ],
-        [
-            Input("map_view", "value")
-        ],
-        [
-            State("map_title", "children")
-        ]
-
-    )
     def update_map_view(map_view, map_title):
         if map_view == 0:
             map_new = "Fire alarms"
@@ -107,7 +97,7 @@ if __name__ == "__main__":
         else:
             map_new = map_title
 
-        return scattermap.update(map_view), map_new
+        return map_new
 
     def update_wc(neighbourhood):
         img = BytesIO()
@@ -124,19 +114,35 @@ if __name__ == "__main__":
             Output(histogram.html_id, "figure"),
             Output(horizontal_bar.html_id, "figure"),
             Output(wordcloud.html_id, "src"),
+            Output(scattermap.html_id, "figure"),
+            Output("map_title", "children")
         ],
         [
             Input("select_neigh", "value"),
             Input("zip_code_text", "value"),
             Input("local_switch", "on"),
+            Input("map_view", "value"),
         ],
         [State("header_title", "children"), State(histogram.html_id, "figure"),
         State(horizontal_bar.html_id, "figure"),
-        State(wordcloud.html_id, "src")],
+        State(wordcloud.html_id, "src"), State("map_title", "children")],
     )
     def update_neighbourhoods(
-        select_name, zip_code_text, local_switch, header_state, histogram_current, hb_current, wordcloud_current
+        select_name, zip_code_text, local_switch, map_view, header_state, histogram_current, hb_current, 
+        wordcloud_current, title_current
     ):
+        if dash.callback_context.triggered_id == "map_view":
+            map_title_new = update_map_view(map_view, title_current)
+            return (
+                header_state,
+                None,
+                zip_code_text,
+                histogram_current,
+                hb_current,
+                wordcloud_current,
+                scattermap.update(map_view),
+                map_title_new
+            )
         if zip_code_text is not None:
             if (not zip_code_text.isdigit()) or (len(zip_code_text) != 5):
                 return (
@@ -145,7 +151,9 @@ if __name__ == "__main__":
                     zip_code_text,
                     histogram_current,
                     hb_current,
-                    wordcloud_current
+                    wordcloud_current,
+                    scattermap.fig,
+                    title_current
                 )
             else:
                 # Load data
@@ -164,7 +172,9 @@ if __name__ == "__main__":
                         zip_code_text,
                         histogram_current,
                         hb_current,
-                        wordcloud_current
+                        wordcloud_current,
+                        scattermap.fig,
+                        title_current
                     )
                 else:
                     neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
@@ -174,7 +184,9 @@ if __name__ == "__main__":
                         "",
                         histogram.update(neighbourhood, local_switch),
                         horizontal_bar.update(None),
-                        update_wc(neighbourhood)
+                        update_wc(neighbourhood),
+                        scattermap.update(loc_change=True, neighbourhood=neighbourhood),
+                        title_current
                     )
         elif select_name != "All":
             return (
@@ -183,7 +195,9 @@ if __name__ == "__main__":
                 None,
                 histogram.update(select_name, local_switch),
                 horizontal_bar.update(None),
-                update_wc(select_name)
+                update_wc(select_name),
+                scattermap.update(loc_change=True, neighbourhood=select_name),
+                title_current
             )
         else:
             return (
@@ -192,7 +206,9 @@ if __name__ == "__main__":
                 None,
                 histogram.update(None, local_switch),
                 horizontal_bar.update(None),
-                update_wc(None)
+                update_wc(None),
+                scattermap.update(loc_change=True),
+                title_current
             )
 
     app.run_server(debug=False, dev_tools_ui=False)

@@ -8,14 +8,14 @@ class Map(html.Div):
         self.html_id = name.lower().replace(" ", "-")
         self.df = df
         self.zoom = 1
-        self.nbh = "Astoria"
+        self.nbh = None
         self.colours = ["blue", "red"]
         self.mode = 0
         # Equivalent to `html.Div([...])`
         super().__init__(
             className="graph_card",
             children=[
-                html.H6(name, id="map_title"),
+                html.H6("Fire alarms", id="map_title"),
                 dcc.Graph(id=self.html_id)
             ],
         )
@@ -23,7 +23,7 @@ class Map(html.Div):
         
     
 
-    def update(self, mode, loc_change=False, colours=["blue", "red"], neighbourhood=None):
+    def update(self, mode=None, loc_change=False, colours=["blue", "red"], neighbourhood=None):
 
         self.fig = go.Figure()
 
@@ -53,14 +53,17 @@ class Map(html.Div):
         }
 
         # we also need to know the zoom level and center
-        if self.nbh is None:
-            zoom = 9
-        else:
-            if self.nbh in groups:
-                zoom = 11
+        if loc_change:
+            if self.nbh is None:
+                zoom = 9
             else:
-                zoom = 14
-        
+                if self.nbh in groups:
+                    zoom = 11
+                else:
+                    zoom = 14
+
+
+
         center_lat = filter["latitude"].mean()
         center_lon = filter["longitude"].mean()
 
@@ -88,6 +91,7 @@ class Map(html.Div):
                             lat=filter.latitude,
                             lon=filter.longitude,
                             marker_color=filter.colour,
+                            marker_allowoverlap=False,
                             hovertext=filter.id,
 
         ))
@@ -99,7 +103,7 @@ class Map(html.Div):
 
         self.fig.update_layout(mapbox = {
             "center": center,
-            "zoom": zoom
+            "zoom": 7
         })
 
         self.fig.update_traces(mode='markers', marker_size=10)
@@ -108,6 +112,3 @@ class Map(html.Div):
 
 
         return self.fig
-
-    def aggregate_data():
-        print()
