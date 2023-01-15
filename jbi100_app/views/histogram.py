@@ -52,5 +52,4 @@ class Histogram(html.Div):
             paper_bgcolor="#212121",
             plot_bgcolor="#212121",
         )
-
         return self.fig

@@ -26,6 +26,7 @@ if __name__ == "__main__":
     scatterplot4 = Scatterplot("Scatterplot 4", "petal_length", "petal_width", df)
 
     noise_map = NoiseMap("Noise map")
+    noise_map.update()
     histogram = Histogram("Histogram", "host_listings_neighbourhood_count", df2)
 
     app.layout = html.Div(
@@ -49,7 +50,7 @@ if __name__ == "__main__":
         ],
     )
 
-    noise_map.update()
+    # noise_map.update()
 
     # Define interactions
     @app.callback(
@@ -73,6 +74,8 @@ if __name__ == "__main__":
         return scatterplot2.update(selected_color, selected_data)
 
 
+
+
     # Update title based on drop down
     @app.callback(
         [
@@ -80,6 +83,7 @@ if __name__ == "__main__":
             Output("error", "children"),
             Output("zip_code_text", "value"),
             Output(histogram.html_id, "figure"),
+            Output(noise_map.html_id, "figure")
         ],
         [
             Input("select_neigh", "value"), 
@@ -118,10 +122,10 @@ if __name__ == "__main__":
                     )
                 else:
                     neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
-                    return "Airbnb in New York: " + neighbourhood, None, "", histogram.update(neighbourhood)
+                    return "Airbnb in New York: " + neighbourhood, None, "", histogram.update(neighbourhood), noise_map.update()
         elif select_name != "All":
-            return "Airbnb in New York: " + select_name, None, None, histogram.update(select_name) 
+            return "Airbnb in New York: " + select_name, None, None, histogram.update(select_name), noise_map.update()
         else:
-            return "Airbnb in New York", None, None, histogram.update()
+            return "Airbnb in New York", None, None, histogram.update(), noise_map.update()
 
     app.run_server(debug=False, dev_tools_ui=False)

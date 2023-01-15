@@ -8,6 +8,18 @@ from  shapely.wkt import loads
 import matplotlib.pyplot as plt
 import geopandas as gpd
 
+df = pd.read_csv("data/noise.csv").drop(columns='geometry')
+gdf = gpd.read_file("data/voronoi.geojson")
+gdf = gdf.to_crs({'proj':'cea'})
+gdf['area'] = gdf.area/10**6
+areas = pd.DataFrame(gdf[['id', 'area']]).astype({'id': 'int64'})
+res = pd.merge(df, areas, on='id')
+res['density'] = res['incident_cnt']/res['area']
+print(res)
+print(res['density'].median())
+res.to_csv("data/noise.csv")
+exit()
+
 # read cleaned data
 df = pd.read_csv("data/noise.csv")
 df = df.set_index('id')

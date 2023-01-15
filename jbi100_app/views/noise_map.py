@@ -6,50 +6,40 @@ import json
 from shapely.geometry import Polygon
 import pandas as pd
 import geovoronoi as gv
+import plotly.express as px
 
 
 class NoiseMap(html.Div):
     def __init__(self, name):
         self.html_id = name.lower().replace(" ", "-")
-
-        self.df = pd.read_csv("data/noise_complaints_clean.csv")
-        self.voronoi = self.calc_voronoi()
-        print("test")
+        self.df = pd.read_csv("data/noise.csv")
+        with open('data/voronoi.geojson' , 'r') as file:
+            self.voronoi = json.load(file)
         # Equivalent to `html.Div([...])`
         super().__init__(
             className="graph_card",
             children=[
                 html.H6(name),
-                dcc.Graph(id=self.html_id)
+                dcc.Graph(id=self.html_id),
             ],
         )
-        
-    def calc_voronoi(self):
-        long_min = self.df['longitude'].min()-0.025
-        long_max = self.df['longitude'].max()+0.025
-        lat_min = self.df['latitude'].min()-0.025
-        lat_max = self.df['latitude'].max()+0.025
-
-        points = [
-        (long_min, lat_max),
-        (long_max, lat_max),
-        (long_max, lat_min),
-        (long_min, lat_min),
-            ]
-        shape = Polygon(points)
-        coords = self.df[['longitude', 'latitude']].to_numpy()
-        region_polys, region_pts = gv.voronoi_regions_from_coords(coords, shape)
-
+        self.fig = px.choropleth_mapbox(self.df, geojson=self.voronoi, locations='id', color='density',
+                    color_continuous_scale="Viridis",
+                    range_color=(0, 200),
+                    mapbox_style="carto-darkmatter",
+                    zoom=10, center = {"lat": 40.705990161916645, "lon": -73.97582996116756},
+                    opacity=0.2,
+                    hover_data=["area", "incident_cnt", "density"],
+                    labels={'incident_cnt':'complaints', 'density':'complaints/km^2'}
+                    )        
 
     def update(self):
-
-
-
-
-        print("Hello world")
-
-        self.fig =  px.choropleth_mapbox()
-
+        
+        self.fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+        self.fig.update_traces(marker_line_width=0)
+        self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
+        self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
+        print("updating map")
         # x_values = self.df[self.feature_x]
         # y_values = self.df[self.feature_y]
         # self.fig.add_trace(go.Scatter(
@@ -92,5 +82,5 @@ class NoiseMap(html.Div):
         #     xaxis_title=self.feature_x,
         #     yaxis_title=self.feature_y,
         # )
-
+        print(type(self.fig))
         return self.fig
