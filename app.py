@@ -35,8 +35,8 @@ if __name__ == "__main__":
     wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
     
     # can change it later
-    rq3 = RQ3("rq3", "airbnb_counts_per_neighbourhood_group", "hotel_counts_per_neighbourhood_group", df_rq3)
-
+    rq3 = RQ3("Number of Airbnbs vs Hotels per neighbourhood group", 
+            "airbnb_counts_per_neighbourhood_group", "hotel_counts_per_neighbourhood_group", df_rq3)
 
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",

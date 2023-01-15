@@ -59,10 +59,10 @@ class RQ3(html.Div):
                     gridcolor="#424242",
                     color="#f1f1f1",
                 ),
-                title=dict(
-                    text="Number of <br> Airbnbs vs Hotels <br> Per neighbourhood group",
-                    x=0.5,
-                ),
+                #title=dict(
+                #    text="Number of <br> Airbnbs vs Hotels <br> Per neighbourhood group",
+                #    x=0.5,
+                #),
                 hoverlabel=dict(bgcolor="white", font_size=16, font_family="Arial"),
                 margin=dict(l=100, b=40, t=100, r=100),
                 hovermode="closest",
