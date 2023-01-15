@@ -1,0 +1,86 @@
+,neighbourhood,neighbourhood_group,airbnb_counts_per_neighbourhood,zipcode,hotel_counts_per_neighbourhood
+0,New Dorp,Staten Island,1,10306,2
+1,Westerleigh,Staten Island,1,10314,2
+2,New Springville,Staten Island,3,10314,10
+3,Grymes Hill,Staten Island,7,10301,2
+4,Woodlawn,Bronx,7,10470,9
+5,Stapleton,Staten Island,19,10305,4
+6,Fresh Meadows,Queens,32,11365,2
+7,Mount Hope,Bronx,31,10457,8
+8,Breezy Point,Queens,4,11694,6
+9,Kensington,Brooklyn,117,11218,4
+10,Briarwood,Queens,36,11435,12
+11,Highbridge,Bronx,24,10452,8
+12,Brownsville,Brooklyn,108,11212,10
+13,Melrose,Bronx,16,10455,5
+14,Pelham Bay,Bronx,14,10461,2
+15,Bensonhurst,Brooklyn,72,11214,2
+16,Flatlands,Brooklyn,101,11234,4
+17,Clinton Hill,Brooklyn,367,11238,8
+18,Norwood,Bronx,27,10467,4
+19,Allerton,Bronx,45,10469,2
+20,Bay Ridge,Brooklyn,147,11209,4
+21,Jamaica,Queens,312,11423,36
+22,Soundview,Bronx,15,10465,6
+23,Morrisania,Bronx,19,10459,10
+24,Belmont,Bronx,30,10458,2
+25,DUMBO,Brooklyn,26,11217,40
+26,Kew Gardens,Queens,50,11435,4
+27,South Ozone Park,Queens,72,11430,8
+28,Park Slope,Brooklyn,324,11215,18
+29,Bayside,Queens,71,11361,6
+30,Rego Park,Queens,93,11374,2
+31,Fordham,Bronx,63,10468,6
+32,Midwood,Brooklyn,103,11230,2
+33,Corona,Queens,72,11368,8
+34,Carroll Gardens,Brooklyn,179,11231,7
+35,Brighton Beach,Brooklyn,60,11235,8
+36,Kingsbridge,Bronx,75,10468,2
+37,Jackson Heights,Queens,207,11372,14
+38,Lower East Side,Manhattan,797,10002,2
+39,Maspeth,Queens,102,11378,4
+40,Fort Greene,Brooklyn,322,11205,2
+41,Mott Haven,Bronx,92,10454,18
+42,College Point,Queens,36,11354,8
+43,Ozone Park,Queens,88,11417,6
+44,Greenpoint,Brooklyn,708,11222,12
+45,Williamsbridge,Bronx,70,10469,4
+46,Crown Heights,Brooklyn,1197,11216,25
+47,Elmhurst,Queens,248,11373,12
+48,Springfield Gardens,Queens,137,11434,26
+49,East Flatbush,Brooklyn,530,11234,2
+50,Bushwick,Brooklyn,1657,11237,25
+51,Sunset Park,Brooklyn,297,11220,44
+52,Flushing,Queens,485,11355,52
+53,East Village,Manhattan,1057,10003,30
+54,Borough Park,Brooklyn,76,11219,6
+55,Astoria,Queens,686,11103,9
+56,Flatbush,Brooklyn,488,11230,10
+57,Longwood,Bronx,67,10459,4
+58,Gramercy,Manhattan,227,10010,41
+59,East Harlem,Manhattan,768,10035,8
+60,Upper East Side,Manhattan,1379,10128,40
+61,Chinatown,Manhattan,237,10002,73
+62,Woodside,Queens,336,11377,8
+63,Gravesend,Brooklyn,68,11223,4
+64,Whitestone,Queens,13,11357,2
+65,Sheepshead Bay,Brooklyn,172,11235,8
+66,Eastchester,Bronx,24,10466,8
+67,East Elmhurst,Queens,234,11368,14
+68,Far Rockaway,Queens,56,11691,6
+69,North Riverdale,Bronx,38,10471,4
+70,SoHo,Manhattan,242,10013,854
+71,East New York,Brooklyn,326,11207,27
+72,Crotona Park,Bronx,2,10459,2
+73,Brooklyn Heights,Brooklyn,92,11201,11
+74,Washington Heights,Manhattan,587,10033,6
+75,Morningside Heights,Manhattan,188,10027,57
+76,Murray Hill,Manhattan,371,10017,64
+77,Midtown,Manhattan,1701,10022,1427
+78,Queens Village,Queens,104,11429,5
+79,Battery Park City,Manhattan,87,10038,95
+80,Rosedale,Queens,147,11422,2
+81,West Village,Manhattan,572,10014,72
+82,Upper West Side,Manhattan,1630,10025,94
+83,Bellerose,Queens,17,11426,2
+84,Williamsburg,Brooklyn,2456,11249,2
