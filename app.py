@@ -4,6 +4,7 @@ from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
 from jbi100_app.views.horizontal_bar import HorizontalBar
 from jbi100_app.views.word_cloud import WordsCloud
+from jbi100_app.views.map import Map
 
 from dash import html
 import plotly.express as px
@@ -28,14 +29,9 @@ if __name__ == "__main__":
 
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
-    scatterplot2 = Scatterplot("Scatterplot 2", "petal_length", "petal_width", df)
-<<<<<<< HEAD
-    scattermap = Map("Map 1", df2)
-    scatterplot4 = Scatterplot("Scatterplot 4", "petal_length", "petal_width", df)
-=======
+    scattermap = Map("Map", df2)
     #scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
     wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
->>>>>>> master
 
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",
@@ -71,7 +67,7 @@ if __name__ == "__main__":
                     ),
                     histogram,
                     wordcloud,
-                    scatterplot2,
+                    scattermap,
                     horizontal_bar,
                 ],
             ),
@@ -90,15 +86,28 @@ if __name__ == "__main__":
         return scatterplot1.update(selected_color, selected_data)
 
     @app.callback(
-        Output(scatterplot2.html_id, "figure"),
         [
-            Input("select-color-scatter-2", "value"),
-            Input(scatterplot2.html_id, "selectedData"),
+            Output(scattermap.html_id, "figure"),
+            Output("map_title", "children")
         ],
-    )
-    def update_scatter_2(selected_color, selected_data):
-        return scatterplot2.update(selected_color, selected_data)
+        [
+            Input("map_view", "value")
+        ],
+        [
+            State("map_title", "children")
+        ]
 
+    )
+    def update_map_view(map_view, map_title):
+        if map_view == 0:
+            map_new = "Fire alarms"
+        elif map_view == 1:
+            map_new = "Carbon monoxide monitors"
+        # elif map_view == 2:
+        else:
+            map_new = map_title
+
+        return scattermap.update(map_view), map_new
 
     def update_wc(neighbourhood):
         img = BytesIO()
