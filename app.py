@@ -2,6 +2,7 @@ from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
+from jbi100_app.views.noise_map import NoiseMap
 
 from dash import html
 import plotly.express as px
@@ -24,6 +25,7 @@ if __name__ == "__main__":
     scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
     scatterplot4 = Scatterplot("Scatterplot 4", "petal_length", "petal_width", df)
 
+    noise_map = NoiseMap("Noise map")
     histogram = Histogram("Histogram", "host_listings_neighbourhood_count", df2)
 
     app.layout = html.Div(
@@ -42,10 +44,12 @@ if __name__ == "__main__":
                 className="nine columns",
                 children=[scatterplot1,
                     html.Div( id="settings", className="three columns", children=make_menu_layout()),
-                        scatterplot2, histogram, scatterplot3, scatterplot4],
+                        scatterplot2, histogram, noise_map, scatterplot4],
             ),
         ],
     )
+
+    noise_map.update()
 
     # Define interactions
     @app.callback(
@@ -75,7 +79,7 @@ if __name__ == "__main__":
             Output("header_title", "children"),
             Output("error", "children"),
             Output("zip_code_text", "value"),
-            Output(histogram.html_id, "figure")
+            Output(histogram.html_id, "figure"),
         ],
         [
             Input("select_neigh", "value"), 
