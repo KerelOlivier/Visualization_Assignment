@@ -2,6 +2,7 @@ from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
+from jbi100_app.views.scatterplot_rq3 import RQ3
 
 from dash import html
 import plotly.express as px
@@ -19,12 +20,18 @@ if __name__ == "__main__":
     APP_PATH = str(pathlib.Path(__file__).parent.resolve())
 
     df2 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv")))
-
+    # rq3
+    df_rq3 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "Hotels_Airbnbs_merged.csv")))
+    
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
     scatterplot2 = Scatterplot("Scatterplot 2", "petal_length", "petal_width", df)
     # scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
     wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
+    
+    # can change it later
+    rq3 = RQ3("rq3", "airbnb_counts_per_neighbourhood_group", "hotel_counts_per_neighbourhood_group", df_rq3)
+
 
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",
@@ -49,7 +56,7 @@ if __name__ == "__main__":
                 className="nine columns",
                 children=[scatterplot1,
                     html.Div( id="settings", className="three columns", children=make_menu_layout()),
-                        scatterplot2, histogram, scatterplot3, scatterplot4],
+                        scatterplot2, histogram, rq3, scatterplot4],
             ),
         ],
     )
@@ -75,6 +82,14 @@ if __name__ == "__main__":
     def update_scatter_2(selected_color, selected_data):
         return scatterplot2.update(selected_color, selected_data)
 
+    @app.callback(
+        Output(rq3.html_id, "figure"),
+        [
+            Input(rq3.html_id, "hoverData")
+        ],  
+    )
+    def update_rq3(hoverData):
+        return rq3.update(hoverData)
 
     # Update title based on drop down
     @app.callback(
