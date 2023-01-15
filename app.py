@@ -2,6 +2,8 @@ from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
+from jbi100_app.views.horizontal_bar import HorizontalBar
+from jbi100_app.views.word_cloud import WordsCloud
 from jbi100_app.views.scatterplot_rq3 import RQ3
 
 from dash import html
@@ -19,10 +21,13 @@ if __name__ == "__main__":
     df = px.data.iris()
     APP_PATH = str(pathlib.Path(__file__).parent.resolve())
 
-    df2 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv")))
-    # rq3
-    df_rq3 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "Hotels_Airbnbs_merged.csv")))
+    df2 = pd.read_csv(
+        os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv"))
+    )
     
+    # rq3
+    df_rq3 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "Hotels_Airbnbs_merged.csv")))    
+
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
     scatterplot2 = Scatterplot("Scatterplot 2", "petal_length", "petal_width", df)
@@ -39,7 +44,11 @@ if __name__ == "__main__":
         df2,
     )
 
-    histogram = Histogram("Histogram", "host_listings_neighbourhood_count", df2)
+    horizontal_bar = HorizontalBar(
+        "Number of properties per owner",
+        "host_listings_neighbourhood_count",
+        df2,
+    )
 
     app.layout = html.Div(
         id="app-container",
@@ -54,9 +63,18 @@ if __name__ == "__main__":
             html.Div(
                 id="graph-grid",
                 className="nine columns",
-                children=[scatterplot1,
-                    html.Div( id="settings", className="three columns", children=make_menu_layout()),
-                        scatterplot2, histogram, rq3, scatterplot4],
+                children=[
+                    scatterplot1,
+                    html.Div(
+                        id="settings",
+                        className="three columns",
+                        children=make_menu_layout(),
+                    ),
+                    histogram,
+                    wordcloud,
+                    rq3,
+                    horizontal_bar,
+                ],
             ),
         ],
     )
@@ -82,6 +100,13 @@ if __name__ == "__main__":
     def update_scatter_2(selected_color, selected_data):
         return scatterplot2.update(selected_color, selected_data)
 
+    def update_wc(neighbourhood):
+        img = BytesIO()
+        wordcloud.update(neighbourhood).save(img, format="PNG")
+        return "data:image/png;base64,{}".format(
+            base64.b64encode(img.getvalue()).decode()
+        )
+        
     @app.callback(
         Output(rq3.html_id, "figure"),
         [
