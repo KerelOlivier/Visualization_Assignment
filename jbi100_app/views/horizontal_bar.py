@@ -7,6 +7,7 @@ class HorizontalBar(html.Div):
     def __init__(self, name, feature, df):
         self.html_id = name.lower().replace(" ", "-")
         self.df = df
+        self.df["host_id"] = self.df["host_id"].apply(str)
         self.feature = feature
 
         # Equivalent to `html.Div([...])`
@@ -27,7 +28,7 @@ class HorizontalBar(html.Div):
         self.fig = go.Figure(layout=go.Layout(margin={"t": 0}))
 
         # Number of properties owned by landlord
-        total = self.df.groupby("host_name")["id"].count().reset_index()
+        total = self.df.groupby("host_id")["id"].count().reset_index()
         total.rename(columns={"id": "total_number"}, inplace=True)
         filter = total.head(20)
 
@@ -37,13 +38,10 @@ class HorizontalBar(html.Div):
             else:
                 filter = self.df[self.df.neighbourhood_group == neighbourhood]
 
-            filter = filter.groupby("host_name")["id"].count().reset_index()
+            filter = filter.groupby("host_id")["id"].count().reset_index()
             filter.rename(columns={"id": "local_number"}, inplace=True)
 
-            # To fix later
-            filter = filter.head(20)
-
-            filter = filter.merge(total, on="host_name", how="left")
+            filter = filter.merge(total, on="host_id", how="left")
 
             filter["diff_number"] = filter["total_number"] - filter["local_number"]
 
@@ -51,14 +49,11 @@ class HorizontalBar(html.Div):
 
             self.fig.add_trace(
                 go.Bar(
-                    y=filter["host_name"],
+                    y=filter["host_id"],
                     x=filter["local_number"],
                     name="local",
                     orientation="h",
-                    marker=dict(
-                        color="rgba(246, 78, 139, 0.6)",
-                        line=dict(color="rgba(246, 78, 139, 1.0)", width=3),
-                    ),
+                    marker=dict(color="rgba(246, 78, 139, 0.6)"),
                     customdata=filter["total_number"],
                     hovertemplate="%{y} owns %{x} properties in the local area, and %{customdata} in total in NY.<extra></extra>",
                 )
@@ -66,14 +61,11 @@ class HorizontalBar(html.Div):
             filter = filter[filter.diff_number > 0]
             self.fig.add_trace(
                 go.Bar(
-                    y=filter["host_name"],
+                    y=filter["host_id"],
                     x=filter["diff_number"],
                     name="other areas",
                     orientation="h",
-                    marker=dict(
-                        color="rgba(58, 71, 80, 0.6)",
-                        line=dict(color="rgba(58, 71, 80, 1.0)", width=3),
-                    ),
+                    marker=dict(color="rgba(58, 71, 80, 0.6)"),
                     customdata=filter[["local_number", "total_number"]],
                     hovertemplate="%{y} owns %{customdata[0]} properties in the local area, and %{customdata[1]} in total in NY.<extra></extra>",
                 )
@@ -82,8 +74,7 @@ class HorizontalBar(html.Div):
             self.fig.update_layout(barmode="stack")
 
         else:
-            # To fix later
-            filter = total.head(20)
+            filter = total
 
             filter.sort_values("total_number", inplace=True, ascending=False)
 
@@ -92,11 +83,13 @@ class HorizontalBar(html.Div):
             self.fig.add_trace(
                 go.Bar(
                     x=values,
-                    y=filter["host_name"],
+                    y=filter["host_id"],
                     orientation="h",
                     hovertemplate="%{y} owns %{x} properties in total in NY.<extra></extra>",
                 )
             )
+
+        length = len(filter)
 
         self.fig.update_yaxes(tickmode="linear")
 
@@ -108,6 +101,7 @@ class HorizontalBar(html.Div):
             plot_bgcolor="#212121",
             yaxis=dict(autorange="reversed"),
             bargap=0.8,
+            height=max(500, length * 30),
         )
 
         return self.fig
