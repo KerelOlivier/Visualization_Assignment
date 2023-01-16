@@ -25,23 +25,22 @@ class RQ3(html.Div):
         )
         
     def update(self, neighbourhood=None): 
-        
-        # get the relevant data
+        self.color = ["grey"] * len(self.df)
         if neighbourhood is not None:
             filter = self.df[
                     (self.df.neighbourhood_group == neighbourhood)
                     | (self.df.neighbourhood == neighbourhood)
                     ]
-            color = 'green'
+            for i in filter.index:
+                self.color[i] = "green"
         else:
             filter = self.df
-            color = 'grey'
             
         self.fig = dict(
             data=[
                 dict(
-                    x = filter[self.xf],
-                    y = filter[self.yf],
+                    x = self.x,
+                    y = self.y,
                     text=filter["neighbourhood"],
                     hovertext=[
                         f"<b>{n}</b><br><b># Airbnbs:</b> {a}<br><b># hotels:</b> {h}<extra></extra>"
@@ -53,7 +52,7 @@ class RQ3(html.Div):
                     mode="markers",
                     marker=dict(
                         size=15,
-                        color = color,
+                        color = self.color,
                         line=dict(width=0.5, color="white"),
                     ),
                 )
@@ -102,7 +101,6 @@ class RQ3(html.Div):
             )
         )
         return self.fig
-
 
 
     
