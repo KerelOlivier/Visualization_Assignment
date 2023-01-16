@@ -1,4 +1,3 @@
-
 from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
@@ -14,6 +13,7 @@ import base64
 import pathlib
 import os
 import pandas as pd
+
 if __name__ == "__main__":
     # Create data
     df = px.data.iris()
@@ -33,16 +33,19 @@ if __name__ == "__main__":
     # can change it later
     rq3 = RQ3("Number of Airbnbs vs Hotels per neighbourhood", 
             "airbnb_counts_per_neighbourhood", "hotel_counts_per_neighbourhood", df_rq3)
+    
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",
         "host_listings_neighbourhood_count",
         df2,
     )
+    
     horizontal_bar = HorizontalBar(
         "Number of properties per owner",
         "host_listings_neighbourhood_count",
         df2,
     )
+    
     app.layout = html.Div(
         id="app-container",
         children=[
@@ -71,6 +74,7 @@ if __name__ == "__main__":
             ),
         ],
     )
+    
     # Define interactions
     @app.callback(
         Output(scatterplot1.html_id, "figure"),
@@ -79,6 +83,7 @@ if __name__ == "__main__":
             Input(scatterplot1.html_id, "selectedData"),
         ],
     )
+    
     def update_scatter_1(selected_color, selected_data):
         return scatterplot1.update(selected_color, selected_data)
     @app.callback(
@@ -88,6 +93,7 @@ if __name__ == "__main__":
             Input(scatterplot2.html_id, "selectedData"),
         ],
     )
+    
     def update_scatter_2(selected_color, selected_data):
         return scatterplot2.update(selected_color, selected_data)
     def update_wc(neighbourhood):
@@ -97,7 +103,6 @@ if __name__ == "__main__":
             base64.b64encode(img.getvalue()).decode()
         )
         
-
     # Update title based on drop down
     @app.callback(
         [
@@ -122,6 +127,7 @@ if __name__ == "__main__":
             State(rq3.html_id, "figure")
         ],
     )
+    
     def update_neighbourhoods(
         select_name,
         zip_code_text,
