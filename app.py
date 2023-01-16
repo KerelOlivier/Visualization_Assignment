@@ -21,31 +21,37 @@ if __name__ == "__main__":
     df2 = pd.read_csv(
         os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv"))
     )
-    
-    # rq3. might replace 
-    df_rq3 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "Hotel_final.csv")))    
+
+    # rq3. might replace
+    df_rq3 = pd.read_csv(
+        os.path.join(APP_PATH, os.path.join("data", "hotel_final_grouped.csv"))
+    )
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
     scatterplot2 = Scatterplot("Scatterplot 2", "petal_length", "petal_width", df)
     # scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
     wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
-    
+
     # can change it later
-    rq3 = RQ3("Number of Airbnbs vs Hotels per neighbourhood", 
-            "airbnb_counts_per_neighbourhood", "hotel_counts_per_neighbourhood", df_rq3)
-    
+    rq3 = RQ3(
+        "Number of Airbnbs vs Hotels per neighbourhood",
+        "airbnb_counts_per_neighbourhood",
+        "hotel_counts_per_neighbourhood",
+        df_rq3,
+    )
+
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",
         "host_listings_neighbourhood_count",
         df2,
     )
-    
+
     horizontal_bar = HorizontalBar(
         "Number of properties per owner",
         "host_listings_neighbourhood_count",
         df2,
     )
-    
+
     app.layout = html.Div(
         id="app-container",
         children=[
@@ -60,21 +66,21 @@ if __name__ == "__main__":
                 id="graph-grid",
                 className="nine columns",
                 children=[
-                    scatterplot1,
+                    rq3,
                     html.Div(
                         id="settings",
                         className="three columns",
                         children=make_menu_layout(),
                     ),
-                    rq3,
                     histogram,
                     wordcloud,
+                    scatterplot1,
                     horizontal_bar,
                 ],
             ),
         ],
     )
-    
+
     # Define interactions
     @app.callback(
         Output(scatterplot1.html_id, "figure"),
@@ -83,9 +89,9 @@ if __name__ == "__main__":
             Input(scatterplot1.html_id, "selectedData"),
         ],
     )
-    
     def update_scatter_1(selected_color, selected_data):
         return scatterplot1.update(selected_color, selected_data)
+
     @app.callback(
         Output(scatterplot2.html_id, "figure"),
         [
@@ -93,16 +99,16 @@ if __name__ == "__main__":
             Input(scatterplot2.html_id, "selectedData"),
         ],
     )
-    
     def update_scatter_2(selected_color, selected_data):
         return scatterplot2.update(selected_color, selected_data)
+
     def update_wc(neighbourhood):
         img = BytesIO()
         wordcloud.update(neighbourhood).save(img, format="PNG")
         return "data:image/png;base64,{}".format(
             base64.b64encode(img.getvalue()).decode()
         )
-        
+
     # Update title based on drop down
     @app.callback(
         [
@@ -112,7 +118,7 @@ if __name__ == "__main__":
             Output(histogram.html_id, "figure"),
             Output(horizontal_bar.html_id, "figure"),
             Output(wordcloud.html_id, "src"),
-            Output(rq3.html_id, "figure")
+            Output(rq3.html_id, "figure"),
         ],
         [
             Input("select_neigh", "value"),
@@ -124,10 +130,9 @@ if __name__ == "__main__":
             State(histogram.html_id, "figure"),
             State(horizontal_bar.html_id, "figure"),
             State(wordcloud.html_id, "src"),
-            State(rq3.html_id, "figure")
+            State(rq3.html_id, "figure"),
         ],
     )
-    
     def update_neighbourhoods(
         select_name,
         zip_code_text,
@@ -177,7 +182,7 @@ if __name__ == "__main__":
                         histogram.update(neighbourhood, local_switch),
                         horizontal_bar.update(neighbourhood),
                         update_wc(neighbourhood),
-                        rq3.update(neighbourhood)
+                        rq3.update(neighbourhood),
                     )
         elif select_name != "All":
             return (
@@ -187,7 +192,7 @@ if __name__ == "__main__":
                 histogram.update(select_name, local_switch),
                 horizontal_bar.update(select_name),
                 update_wc(select_name),
-                rq3.update(select_name)
+                rq3.update(select_name),
             )
         else:
             return (
@@ -197,6 +202,7 @@ if __name__ == "__main__":
                 histogram.update(None, local_switch),
                 horizontal_bar.update(None),
                 update_wc(None),
-                rq3.update(None)
+                rq3.update(None),
             )
+
     app.run_server(debug=False, dev_tools_ui=False)
