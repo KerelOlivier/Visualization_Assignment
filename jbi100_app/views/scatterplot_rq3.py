@@ -24,24 +24,36 @@ class RQ3(html.Div):
             ],
         )
         
-    def update(self, hoverData):
+    def update(self, neighbourhood=None): 
+        
+        # get the relevant data
+        if neighbourhood is not None:
+            filter = self.df[
+                    (self.df.neighbourhood_group == neighbourhood)
+                    | (self.df.neighbourhood == neighbourhood)
+                    ]
+            color = 'green'
+        else:
+            filter = self.df
+            color = 'grey'
+            
         self.fig = dict(
             data=[
                 dict(
-                    x=self.x,
-                    y=self.y,
-                    text=self.df["neighbourhood_group"],
+                    x = filter[self.xf],
+                    y = filter[self.yf],
+                    text=filter["neighbourhood"],
                     hovertext=[
                         f"<b>{n}</b><br><b># Airbnbs:</b> {a}<br><b># hotels:</b> {h}<extra></extra>"
                         for n, a, h in zip(
-                            self.df["neighbourhood_group"], self.x, self.y
+                            self.df["neighbourhood"], self.x, self.y
                         )
                     ],
                     hovertemplate="%{hovertext}",
                     mode="markers",
                     marker=dict(
                         size=15,
-                        color=["rgb(200, 200, 200)"] * len(self.df),
+                        color = color,
                         line=dict(width=0.5, color="white"),
                     ),
                 )
@@ -60,7 +72,7 @@ class RQ3(html.Div):
                     color="#f1f1f1",
                 ),
                 #title=dict(
-                #    text="Number of <br> Airbnbs vs Hotels <br> Per neighbourhood group",
+                #    text="Number of <br> Airbnbs vs Hotels <br> per neighbourhood",
                 #    x=0.5,
                 #),
                 hoverlabel=dict(bgcolor="white", font_size=16, font_family="Arial"),
@@ -89,14 +101,8 @@ class RQ3(html.Div):
                 hoverinfo="none",
             )
         )
-        
-        if hoverData is not None:
-            selected_point = hoverData["points"][0]["pointNumber"]
-            colors = [
-                "rgb(87, 245, 66)"
-                if i == selected_point
-                else "rgb(100, 100, 100)"
-                for i in range(len(self.df))
-            ]
-            self.fig["data"][0]["marker"]["color"] = colors
         return self.fig
+
+
+
+    
