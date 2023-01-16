@@ -24,6 +24,7 @@ class RQ3(html.Div):
 
     def update(self, neighbourhood=None):
 
+        # Choose size
         size = 10
 
         # get the relevant data
