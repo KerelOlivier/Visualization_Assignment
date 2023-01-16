@@ -23,7 +23,7 @@ if __name__ == "__main__":
     )
     
     # rq3. might replace 
-    df_rq3 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "Hotel_with_neighbour_counts_Airbnb.csv")))    
+    df_rq3 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "Hotel_final.csv")))    
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
     scatterplot2 = Scatterplot("Scatterplot 2", "petal_length", "petal_width", df)
