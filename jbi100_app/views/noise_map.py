@@ -35,11 +35,23 @@ class NoiseMap(html.Div):
 
     def update(self):
         
-        self.fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+        self.fig.update_layout(
+            margin={"r":0,"t":0,"l":0,"b":0},
+            yaxis_zeroline=False,
+            xaxis_zeroline=False,
+            dragmode='select',
+            paper_bgcolor="#212121",
+            plot_bgcolor="#212121",
+            coloraxis_colorbar=dict(
+                title="Complaint density",
+                titlefont=dict(color="#f1f1f1"),
+                ticks="outside",
+                tickcolor="#f1f1f1",
+                tickfont=dict(color="#f1f1f1")
+            ))
         self.fig.update_traces(marker_line_width=0)
         self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
         self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
-        print("updating map")
         # x_values = self.df[self.feature_x]
         # y_values = self.df[self.feature_y]
         # self.fig.add_trace(go.Scatter(
@@ -49,13 +61,7 @@ class NoiseMap(html.Div):
         #     marker_color='rgb(200,200,200)'
         # ))
         # self.fig.update_traces(mode='markers', marker_size=10)
-        # self.fig.update_layout(
-        #     yaxis_zeroline=False,
-        #     xaxis_zeroline=False,
-        #     dragmode='select',
-        #     paper_bgcolor="#212121",
-        #     plot_bgcolor="#212121",
-        # )
+ 
         # self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
         # self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
         # # highlight points with selection other graph
