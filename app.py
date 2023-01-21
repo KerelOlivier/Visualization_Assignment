@@ -120,8 +120,8 @@ if __name__ == "__main__":
             Output(horizontal_bar.html_id, "figure"),
             Output(wordcloud.html_id, "src"),
             Output(mapgroup.html_id, "figure"),
-            Output("map_title", "children"),
             Output(rq3.html_id, "figure"),
+            Output("map_title", "children"),
         ],
         [
             Input("select_neigh", "value"),
