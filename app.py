@@ -161,7 +161,8 @@ if __name__ == "__main__":
             Input("zip_code_text", "value"),
             Input("local_switch", "on"),
             Input("map_view", "value"),
-            Input("cb_mode", "value")
+            Input("cb_mode", "value"),
+            Input("histogram", "clickData")
         ],
         [
             State("header_title", "children"),
@@ -180,6 +181,7 @@ if __name__ == "__main__":
         local_switch,
         map_view,
         cb_mode,
+        histo_click,
         header_state,
         histogram_current,
         hb_current,
@@ -187,6 +189,22 @@ if __name__ == "__main__":
         scatterplot_current,
         title_current,
     ):
+        if dash.callback_context.triggered_id == "histogram":
+            print(histo_click)
+            prop_cnt = histo_click['points'][0]['x']
+            return (
+                header_state,
+                None,
+                None,
+                histogram_current,
+                horizontal_bar.update(select_name, prop_cnt),
+                wordcloud_current,
+                mapgroup.fig,
+                scatterplot_current,
+                title_current,
+                ""                   
+            )
+
         if dash.callback_context.triggered_id == "cb_mode":
             print(cb_mode)
             update_colors(cb_mode)

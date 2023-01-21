@@ -23,7 +23,7 @@ def generate_description_card():
     return html.Div(
         id="description-card",
         children=[
-            html.H5("Example dashboard"),
+            html.H5("Settings"),
             html.Div(
                 id="intro"
             ),

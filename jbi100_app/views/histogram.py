@@ -5,7 +5,7 @@ import jbi100_app.views.colors as clrs
 
 class Histogram(html.Div):
     def __init__(self, name, feature, df):
-        self.html_id = name.lower().replace(" ", "-")
+        self.html_id = "histogram"
         self.df = df
         self.feature = feature
 

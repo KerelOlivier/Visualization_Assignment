@@ -23,7 +23,7 @@ class HorizontalBar(html.Div):
             ],
         )
 
-    def update(self, neighbourhood=None):
+    def update(self, neighbourhood=None, prop_cnt = -1):
 
         # Get rid of upper margin
         self.fig = go.Figure(layout=go.Layout(margin={"t": 0}))
@@ -31,7 +31,10 @@ class HorizontalBar(html.Div):
         # Number of properties owned by landlord
         total = self.df.groupby("host_id")["id"].count().reset_index()
         total.rename(columns={"id": "total_number"}, inplace=True)
+
         filter = total.head(20)
+
+        
 
         if neighbourhood is not None:
             if not self.df[self.df.neighbourhood == neighbourhood].empty:
@@ -43,6 +46,11 @@ class HorizontalBar(html.Div):
             filter.rename(columns={"id": "local_number"}, inplace=True)
 
             filter = filter.merge(total, on="host_id", how="left")
+
+
+            if prop_cnt >0:
+                print(prop_cnt)
+                filter = filter[filter['total_number'] == prop_cnt]
 
             filter["diff_number"] = filter["total_number"] - filter["local_number"]
 
@@ -74,6 +82,9 @@ class HorizontalBar(html.Div):
 
         else:
             filter = total
+            if prop_cnt >0:
+                print(prop_cnt)
+                filter = filter[filter['total_number'] == prop_cnt]
 
             filter.sort_values("total_number", inplace=True, ascending=False)
 
