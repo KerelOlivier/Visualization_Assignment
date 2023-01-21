@@ -202,7 +202,7 @@ if __name__ == "__main__":
                 horizontal_bar.update(select_name, prop_cnt),
                 wordcloud_current,
                 mapgroup.fig,
-                scatterplot_current,
+                rq3.fig,
                 map_title_new,
                 ""                   
             )
@@ -250,7 +250,7 @@ if __name__ == "__main__":
                     hb_current,
                     wordcloud_current,
                     mapgroup.fig,
-                    scatterplot_current,
+                    rq3.fig,
                     map_title_new,
                     ""
                     
@@ -273,7 +273,7 @@ if __name__ == "__main__":
                         hb_current,
                         wordcloud_current,
                         mapgroup.fig,                        
-                        scatterplot_current,
+                        rq3.fig,
                         map_title_new,
                         ""
                     )
