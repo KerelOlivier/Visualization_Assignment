@@ -98,7 +98,7 @@ if __name__ == "__main__":
             map_new = "Carbon monoxide monitors"
         # elif map_view == 2:
         else:
-            map_new = 'noise complaints density and airbnb locations '
+            map_new = 'Noise complaints density and Airbnb locations'
         return map_new
 
     def update_wc(neighbourhood):
