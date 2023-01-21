@@ -65,6 +65,16 @@ def generate_control_card():
                 value='fire'
 
             ),
+            html.Label("Colourblind mode:"),
+            dcc.RadioItems(
+                id="cb_mode",
+                options=[
+                    {'label': 'disable', 'value': 'default'}, 
+                    {'label': 'enabled', 'value': 'cb_mode'},
+                ],
+                value='default'
+
+            ),
         ],
         style={"textAlign": "float-left"},
     )

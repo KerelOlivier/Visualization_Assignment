@@ -5,6 +5,7 @@ from jbi100_app.views.histogram import Histogram
 from jbi100_app.views.horizontal_bar import HorizontalBar
 from jbi100_app.views.word_cloud import WordsCloud
 from jbi100_app.views.map_group import MapGroup
+import jbi100_app.views.colors as clrs
 
 import dash
 from jbi100_app.views.scatterplot_rq3 import RQ3
@@ -17,6 +18,38 @@ import pathlib
 import os
 import pandas as pd
 
+
+def update_colors(theme="default"):
+  if theme == "cb_mode":
+    clrs.bg_colour = "#121212"
+    clrs.card_colour = "#212121"
+    clrs.txt_colour = "#f1f1f1"
+    clrs.line_colour = "#424242"
+    #
+    clrs.marker_1 = "#56b4e9"
+    clrs.marker_2 = "#009e73"  #green
+    clrs.marker_3 = "#f0e442"
+    clrs.marker_4 = "#d55e00"  #red
+    clrs.marker_5 = "#cc79a7"
+    clrs.marker_off = "#a8a8a8"  #grey
+
+    clrs.colour_gradient = "Viridis"
+
+  else: #default colors
+    clrs.bg_colour = "#121212"
+    clrs.card_colour = "#212121"
+    clrs.txt_colour = "#f1f1f1"
+    clrs.line_colour = "#424242"
+    #
+    clrs.marker_1 = "#0090e7"
+    clrs.marker_2 = "#00d25b"  #green
+    clrs.marker_3 = "#8f5fe8"
+    clrs.marker_4 = "#fc424a"  #red
+    clrs.marker_5 = "#ffab00"
+    clrs.marker_off = "#a8a8a8"  #grey
+
+    clrs.colour_gradient = "Viridis"
+
 if __name__ == "__main__":
     # Create data
     df = px.data.iris()
@@ -28,7 +61,6 @@ if __name__ == "__main__":
     df_rq3 = pd.read_csv(
         os.path.join(APP_PATH, os.path.join("data", "hotel_final_grouped.csv"))
     )
-
 
     mode = 0
 
@@ -128,6 +160,7 @@ if __name__ == "__main__":
             Input("zip_code_text", "value"),
             Input("local_switch", "on"),
             Input("map_view", "value"),
+            Input("cb_mode", "value")
         ],
         [
             State("header_title", "children"),
@@ -145,6 +178,7 @@ if __name__ == "__main__":
         zip_code_text,
         local_switch,
         map_view,
+        cb_mode,
         header_state,
         histogram_current,
         hb_current,
@@ -152,6 +186,22 @@ if __name__ == "__main__":
         scatterplot_current,
         title_current,
     ):
+        if dash.callback_context.triggered_id == "cb_mode":
+            print(cb_mode)
+            update_colors(cb_mode)
+            map_title_new = update_map_view(map_view, title_current)
+            return (
+                "Airbnb in New York",
+                None,
+                None,
+                histogram.update(None, local_switch),
+                horizontal_bar.update(None),
+                update_wc(None),
+                mapgroup.update(map_mode=map_view, loc_change=True),
+                rq3.update(None),
+                map_title_new
+            )
+
         if dash.callback_context.triggered_id == "map_view":
             map_title_new = update_map_view(map_view, title_current)
             return (

@@ -9,7 +9,7 @@ class Map(html.Div):
         self.df = df
         self.zoom = 1
         self.nbh = None
-        self.colours = [clrs.marker_1, clrs.marker_2]
+        self.colours = [clrs.marker_2, clrs.marker_4]
         self.mode = 0
         # Equivalent to `html.Div([...])`
         super().__init__(
@@ -24,7 +24,8 @@ class Map(html.Div):
     
 
     def update(self, mode=None, loc_change=False, colours=[clrs.marker_2, clrs.marker_4], neighbourhood=None):
-
+        colours=[clrs.marker_2, clrs.marker_4]
+        print(colours)
         self.fig = go.Figure()
 
         # we are now changing the location to use

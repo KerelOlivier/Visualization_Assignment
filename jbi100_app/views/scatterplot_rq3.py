@@ -17,6 +17,7 @@ class RQ3(html.Div):
         self.b = (self.x_diff * self.y_diff).sum() / (self.x_diff**2).sum()
         self.a = self.y_mean - self.b * self.x_mean
 
+
         # Equivalent to `html.Div([...])`
         super().__init__(
             className="graph_card",
