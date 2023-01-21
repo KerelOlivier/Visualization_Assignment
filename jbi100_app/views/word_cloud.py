@@ -37,8 +37,11 @@ class WordsCloud(html.Div):
         x = freqs.most_common(30)
         ## Applying Steven's power law
         boo = {k: v ** (1 / 0.7) for k, v in x}
+
+        # Scale brightness from 20-100% for readability
+        min_value = min(x,key=lambda item:item[1])[1]
         max_value = max(x,key=lambda item:item[1])[1]
-        color = {k: round(100*v/max_value, 0) for k, v in x}
+        color = {k: int(round((v - min_value) * (100-20)/(max_value-min_value) + 20, 0)) for k, v in x}
 
         # create a wordcloud
         wc = WordCloud(
