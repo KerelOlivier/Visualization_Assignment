@@ -1,6 +1,5 @@
 from jbi100_app.views.noise_map import NoiseMap
 from jbi100_app.views.alarm_map import Map
-from jbi100_app.components.toggle import Toggle
 from dash import dcc, html
 import dash_daq as daq
 
