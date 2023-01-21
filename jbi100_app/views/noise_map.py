@@ -46,7 +46,7 @@ class NoiseMap(html.Div):
                                         mapbox_style="carto-darkmatter")
         self.fig.add_trace(self.scatter.data[0])
 
-    def update(self, scatter on):
+    def update(self):
         self.fig.update_layout(
             margin={"r":0,"t":0,"l":0,"b":0},
             yaxis_zeroline=False,
