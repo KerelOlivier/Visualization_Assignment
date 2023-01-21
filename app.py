@@ -154,6 +154,7 @@ if __name__ == "__main__":
             Output(mapgroup.html_id, "figure"),
             Output(rq3.html_id, "figure"),
             Output("map_title", "children"),
+            Output("switch_table", "className")
         ],
         [
             Input("select_neigh", "value"),
@@ -199,7 +200,8 @@ if __name__ == "__main__":
                 update_wc(None),
                 mapgroup.update(map_mode=map_view, loc_change=True),
                 rq3.update(None),
-                map_title_new
+                map_title_new,
+                ""
             )
 
         if dash.callback_context.triggered_id == "map_view":
@@ -213,7 +215,8 @@ if __name__ == "__main__":
                 wordcloud_current,
                 mapgroup.update(map_view),
                 scatterplot_current,
-                map_title_new
+                map_title_new,
+                ""
             )
         print("zip:", zip_code_text)
         if zip_code_text is not None and zip_code_text is not "":
@@ -227,7 +230,8 @@ if __name__ == "__main__":
                     wordcloud_current,
                     mapgroup.fig,
                     scatterplot_current,
-                    title_current
+                    title_current,
+                    ""
                     
                 )
             else:
@@ -249,7 +253,8 @@ if __name__ == "__main__":
                         wordcloud_current,
                         mapgroup.fig,                        
                         scatterplot_current,
-                        title_current
+                        title_current,
+                        ""
                     )
                 else:
                     neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
@@ -262,7 +267,8 @@ if __name__ == "__main__":
                         update_wc(neighbourhood),                    
                         mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=neighbourhood),
                         rq3.update(neighbourhood),
-                        title_current
+                        title_current,
+                        ""
                     )
         elif select_name != "All":
             return (
@@ -274,7 +280,8 @@ if __name__ == "__main__":
                 update_wc(select_name),                
                 mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=select_name),
                 rq3.update(select_name),
-                title_current
+                title_current,
+                ""
             )
         else:
             print("updating", select_name)
@@ -288,7 +295,8 @@ if __name__ == "__main__":
                 update_wc(None),
                 mapgroup.update(map_mode=map_view, loc_change=True),
                 rq3.update(None),
-                map_title_new
+                map_title_new,
+                "disabled"
             )
 
     app.run_server(debug=False, dev_tools_ui=False)

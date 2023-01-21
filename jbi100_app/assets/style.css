@@ -88,3 +88,7 @@ h5 {
     margin:  0 7px;
     padding-bottom: 7px;
 }
+
+.disabled{
+    display: none;
+}

@@ -15,6 +15,8 @@ class Histogram(html.Div):
             children=[
                 html.H6(name),
                 html.Tr(
+                    id="switch_table",
+                    children=
                     [
                         html.Td("Count of local properties owned by local owners"),
                         html.Td(
@@ -30,7 +32,6 @@ class Histogram(html.Div):
         )
 
     def update(self, neighbourhood=None, local_switch=""):
-
         # Get rid of upper margin
         self.fig = go.Figure(layout=go.Layout(margin={"t": 0}))
 
