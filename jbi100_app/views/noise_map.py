@@ -7,6 +7,7 @@ from shapely.geometry import Polygon
 import pandas as pd
 import geovoronoi as gv
 import plotly.express as px
+import jbi100_app.views.colors as clrs
 
 
 class NoiseMap(html.Div):
@@ -26,7 +27,7 @@ class NoiseMap(html.Div):
             ],
         )
         self.fig = px.choropleth_mapbox(self.df, geojson=self.voronoi, locations='id', color='density',
-                    color_continuous_scale="Viridis",
+                    color_continuous_scale=clrs.colour_gradient,
                     range_color=(0, 200),
                     mapbox_style="carto-darkmatter",
                     zoom=9, center = {"lat": 40.705990161916645, "lon": -73.97582996116756},
@@ -39,7 +40,7 @@ class NoiseMap(html.Div):
         self.scatter = px.scatter_mapbox(self.bnb_loc_df,
                                         lat="latitude",lon="longitude",
                                         hover_name="name",
-                                        color_discrete_sequence=["red"],
+                                        color_discrete_sequence=[clrs.marker_4],
                                         hover_data={'latitude':False, 
                                                     'longitude':False},
                                         opacity=0.5,
@@ -52,55 +53,14 @@ class NoiseMap(html.Div):
             yaxis_zeroline=False,
             xaxis_zeroline=False,
             dragmode='select',
-            paper_bgcolor="#212121",
-            plot_bgcolor="#212121",
+            paper_bgcolor=clrs.card_colour,
+            plot_bgcolor=clrs.card_colour,
             coloraxis_colorbar=dict(
                 title="Complaint density",
-                titlefont=dict(color="#f1f1f1"),
+                titlefont=dict(color=clrs.txt_colour),
                 ticks="outside",
-                tickcolor="#f1f1f1",
-                tickfont=dict(color="#f1f1f1")
+                tickcolor=clrs.txt_colour,
+                tickfont=dict(color=clrs.txt_colour)
             ))
-        
-        self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
-        self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
-
-        
-        # x_values = self.df[self.feature_x]
-        # y_values = self.df[self.feature_y]
-        # self.fig.add_trace(go.Scatter(
-        #     x=x_values, 
-        #     y=y_values,
-        #     mode='markers',
-        #     marker_color='rgb(200,200,200)'
-        # ))
-        # self.fig.update_traces(mode='markers', marker_size=10)
- 
-        # self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
-        # self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
-        # # highlight points with selection other graph
-        # if selected_data is None:
-        #     selected_index = self.df.index  # show all
-        # else:
-        #     selected_index = [  # show only selected indices
-        #         x.get('pointIndex', None)
-        #         for x in selected_data['points']
-        #     ]
-
-        # self.fig.data[0].update(
-        #     selectedpoints=selected_index,
-
-        #     # color of selected points
-        #     selected=dict(marker=dict(color=selected_color)),
-
-        #     # color of unselected pts
-        #     unselected=dict(marker=dict(color='rgb(200,200,200)', opacity=0.9))
-        # )
-
-        # # update axis titles
-        # self.fig.update_layout(
-        #     xaxis_title=self.feature_x,
-        #     yaxis_title=self.feature_y,
-        # )
         print(type(self.fig))
         return self.fig

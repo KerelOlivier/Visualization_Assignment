@@ -6,7 +6,7 @@ import pandas as pd
 import re
 from nltk.corpus import stopwords
 import nltk
-
+import jbi100_app.views.colors as clrs
 
 class WordsCloud(html.Div):
     def __init__(self, name, title, df):
@@ -45,7 +45,7 @@ class WordsCloud(html.Div):
         boo = {k: v for k,v in x}
 
         # create a wordcloud
-        wc = WordCloud(background_color='black', width=300, height=360)
+        wc = WordCloud(background_color=clrs.card_colour, width=300, height=360)
         wc.fit_words(boo)
 
         return wc.to_image()

@@ -1,4 +1,5 @@
 from dash import dcc, html
+import jbi100_app.views.colors as clrs
 
 
 class RQ3(html.Div):
@@ -68,7 +69,7 @@ class RQ3(html.Div):
                     mode="markers",
                     marker=dict(
                         size=size,
-                        color="gray",
+                        color=clrs.marker_1,
                         line=dict(width=0.5, color="white"),
                     ),
                 )
@@ -77,8 +78,8 @@ class RQ3(html.Div):
                 xaxis=dict(
                     title="Number of Airbnbs",
                     fixedrange=True,
-                    gridcolor="#424242",
-                    color="#f1f1f1",
+                    gridcolor=clrs.line_colour,
+                    color=clrs.txt_colour,
                 ),
                 yaxis=dict(
                     title="Number of hotels",
@@ -98,9 +99,9 @@ class RQ3(html.Div):
                 yaxis_zeroline=False,
                 xaxis_zeroline=False,
                 dragmode="select",
-                paper_bgcolor="#212121",
-                plot_bgcolor="#212121",
-                titlefont=dict(color="#f1f1f1", size=20, family="Arial"),
+                paper_bgcolor=clrs.card_colour,
+                plot_bgcolor=clrs.card_colour,
+                titlefont=dict(color=clrs.txt_colour, size=20, family="Arial"),
             ),
         )
         if variable == "neighbourhood":

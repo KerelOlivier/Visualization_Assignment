@@ -1,6 +1,7 @@
 from dash import dcc, html
 import plotly.graph_objects as go
 import dash_daq as daq
+import jbi100_app.views.colors as clrs
 
 
 class HorizontalBar(html.Div):
@@ -53,7 +54,7 @@ class HorizontalBar(html.Div):
                     x=filter["local_number"],
                     name="local",
                     orientation="h",
-                    marker=dict(color="rgba(246, 78, 139, 0.6)"),
+                    marker_color=clrs.marker_5,
                     customdata=filter["total_number"],
                     hovertemplate="%{y} owns %{x} properties in the local area, and %{customdata} in total in NY.<extra></extra>",
                 )
@@ -65,7 +66,7 @@ class HorizontalBar(html.Div):
                     x=filter["diff_number"],
                     name="other areas",
                     orientation="h",
-                    marker=dict(color="rgba(58, 71, 80, 0.6)"),
+                    marker_color=clrs.marker_5,
                     customdata=filter[["local_number", "total_number"]],
                     hovertemplate="%{y} owns %{customdata[0]} properties in the local area, and %{customdata[1]} in total in NY.<extra></extra>",
                 )
@@ -97,8 +98,8 @@ class HorizontalBar(html.Div):
         self.fig.update_layout(
             xaxis_title="Number of properties",
             yaxis_title="Airbnb owners",
-            paper_bgcolor="#212121",
-            plot_bgcolor="#212121",
+            paper_bgcolor=clrs.card_colour,
+            plot_bgcolor=clrs.card_colour,
             yaxis=dict(autorange="reversed"),
             bargap=0.8,
             height=max(500, length * 30),

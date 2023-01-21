@@ -1,7 +1,7 @@
 from dash import dcc, html
 import plotly.graph_objects as go
 import dash_daq as daq
-
+import jbi100_app.views.colors as clrs
 
 class Histogram(html.Div):
     def __init__(self, name, feature, df):
@@ -19,7 +19,7 @@ class Histogram(html.Div):
                         html.Td("Count of local properties owned by local owners"),
                         html.Td(
                             daq.BooleanSwitch(
-                                id="local_switch", on=False, color="purple"
+                                id="local_switch", on=False, color=clrs.marker_3
                             )
                         ),
                         html.Td("Count of all properties owned by local owners"),
@@ -64,11 +64,13 @@ class Histogram(html.Div):
             go.Histogram(
                 histfunc="count",
                 x=values,
+                marker_color=clrs.marker_5,
                 hovertemplate="%{y} Airbnb owner(s) own(s) %{x} properties in the selected area.<extra></extra>",
-            )
+            ),
+            
         )
-        self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
-        self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
+        self.fig.update_xaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
+        self.fig.update_yaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
 
         # highlight points with selection other graph
         # if selected_data is None:
@@ -83,8 +85,8 @@ class Histogram(html.Div):
         self.fig.update_layout(
             xaxis_title="Number of Airbnb properties owned in selected area",
             yaxis_title="Number of Airbnb owners",
-            paper_bgcolor="#212121",
-            plot_bgcolor="#212121",
+            paper_bgcolor=clrs.card_colour,
+            plot_bgcolor=clrs.card_colour,
         )
 
         if filter[self.feature].max() < 10:

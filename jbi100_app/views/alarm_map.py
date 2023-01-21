@@ -1,7 +1,7 @@
 from dash import dcc, html
 import plotly.graph_objects as go
 import time
-
+import jbi100_app.views.colors as clrs
 
 class Map(html.Div):
     def __init__(self, name, df):
@@ -9,7 +9,7 @@ class Map(html.Div):
         self.df = df
         self.zoom = 1
         self.nbh = None
-        self.colours = ["blue", "red"]
+        self.colours = [clrs.marker_1, clrs.marker_2]
         self.mode = 0
         # Equivalent to `html.Div([...])`
         super().__init__(
@@ -23,7 +23,7 @@ class Map(html.Div):
         
     
 
-    def update(self, mode=None, loc_change=False, colours=["blue", "red"], neighbourhood=None):
+    def update(self, mode=None, loc_change=False, colours=[clrs.marker_2, clrs.marker_4], neighbourhood=None):
 
         self.fig = go.Figure()
 
@@ -75,10 +75,10 @@ class Map(html.Div):
         # get correct colours
         marker_colours = dict(zip([True,False], colours))
 
-        if self.mode == 0:
+        if self.mode == 'fire':
             # fire alarm node         
             filter["colour"] = filter["has_fire_alarm"].replace(to_replace=marker_colours)
-        elif self.mode == 1:
+        elif self.mode == 'co':
             # co monitor mode
             filter["colour"] = filter["has_co_monitor"].replace(to_replace=marker_colours)
         #elif self.mode == 2:
