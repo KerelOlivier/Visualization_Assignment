@@ -56,14 +56,13 @@ class NoiseMap(html.Div):
 
         zoom = 9
         # we also need to know the zoom level and center
-        if loc_change:
-            if self.nbh is None:
-                zoom = 9
+        if self.nbh is None:
+            zoom = 9
+        else:
+            if self.nbh in groups:
+                zoom = 11
             else:
-                if self.nbh in groups:
-                    zoom = 11
-                else:
-                    zoom = 14
+                zoom = 14
 
         self.fig = px.choropleth_mapbox(self.df, geojson=self.voronoi, locations='id', color='density',
                     color_continuous_scale=clrs.colour_gradient,
