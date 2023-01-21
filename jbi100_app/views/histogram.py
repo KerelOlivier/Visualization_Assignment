@@ -1,5 +1,6 @@
 from dash import dcc, html
 import plotly.graph_objects as go
+import dash_daq as daq
 
 
 class Histogram(html.Div):
@@ -13,26 +14,59 @@ class Histogram(html.Div):
             className="graph_card",
             children=[
                 html.H6(name),
-                dcc.Graph(id=self.html_id)
+                html.Tr(
+                    [
+                        html.Td("Count of local properties owned by local owners"),
+                        html.Td(
+                            daq.BooleanSwitch(
+                                id="local_switch", on=False, color="purple"
+                            )
+                        ),
+                        html.Td("Count of all properties owned by local owners"),
+                    ]
+                ),
+                dcc.Graph(id=self.html_id),
             ],
         )
 
-    def update(self, neighbourhood=None):
-        self.fig = go.Figure()
+    def update(self, neighbourhood=None, local_switch=""):
+
+        # Get rid of upper margin
+        self.fig = go.Figure(layout=go.Layout(margin={"t": 0}))
 
         if neighbourhood is not None:
-            filter = self.df[(self.df.neighbourhood_group == neighbourhood) | (self.df.neighbourhood == neighbourhood)]
+            local_switch = "{}".format(local_switch)
+            if local_switch == "True":
+                if not self.df[self.df.neighbourhood == neighbourhood].empty:
+                    host_ids = self.df[
+                        self.df.neighbourhood == neighbourhood
+                    ].host_id.unique()
+                else:
+                    host_ids = self.df[
+                        self.df.neighbourhood_group == neighbourhood
+                    ].host_id.unique()
+                filter = self.df[self.df.host_id.isin(host_ids)]
+                filter = filter.groupby("host_id")["id"].count().reset_index()
+                filter.rename(columns={"id": self.feature}, inplace=True)
+            else:
+                filter = self.df[
+                    (self.df.neighbourhood_group == neighbourhood)
+                    | (self.df.neighbourhood == neighbourhood)
+                ]
         else:
             filter = self.df
 
-        filter = filter[['host_id', self.feature]].drop_duplicates()
+        filter = filter[["host_id", self.feature]].drop_duplicates()
 
         values = filter[self.feature]
 
-        self.fig.add_trace(go.Histogram(
-            histfunc="count",
-            x=values
-        ))
+        self.fig.add_trace(
+            go.Histogram(
+                histfunc="count",
+                x=values,
+                hovertemplate="%{y} Airbnb owner(s) own(s) %{x} properties in the selected area.<extra></extra>",
+            )
+        )
         self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
         self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
 
@@ -47,9 +81,13 @@ class Histogram(html.Div):
 
         # update axis titles
         self.fig.update_layout(
-            xaxis_title=self.feature,
-            yaxis_title='Count',
+            xaxis_title="Number of Airbnb properties owned in selected area",
+            yaxis_title="Number of Airbnb owners",
             paper_bgcolor="#212121",
             plot_bgcolor="#212121",
         )
+
+        if filter[self.feature].max() < 10:
+            self.fig.update_layout(xaxis_range=[0, 10])
+
         return self.fig

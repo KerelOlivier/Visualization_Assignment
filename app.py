@@ -3,10 +3,16 @@ from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
 from jbi100_app.views.noise_map import NoiseMap
+from jbi100_app.views.horizontal_bar import HorizontalBar
+from jbi100_app.views.word_cloud import WordsCloud
+from jbi100_app.views.map import Map
 
+import dash
 from dash import html
 import plotly.express as px
 from dash.dependencies import Input, Output, State
+from io import BytesIO
+import base64
 
 import pathlib
 import os
@@ -17,17 +23,37 @@ if __name__ == "__main__":
     df = px.data.iris()
     APP_PATH = str(pathlib.Path(__file__).parent.resolve())
 
-    df2 = pd.read_csv(os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv")))
+    df2 = pd.read_csv(
+        os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv"))
+    )
+
+    mode = 0
 
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
-    scatterplot2 = Scatterplot("Scatterplot 2", "petal_length", "petal_width", df)
-    scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
-    scatterplot4 = Scatterplot("Scatterplot 4", "petal_length", "petal_width", df)
+    scattermap = Map("Map", df2)
+    #scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
+    wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
 
     noise_map = NoiseMap("Noise map")
     noise_map.update()
-    histogram = Histogram("Histogram", "host_listings_neighbourhood_count", df2)
+    histogram = Histogram(
+        "Distribution of number of Airbnbs owned by individual owners in selected area",
+        "host_listings_neighbourhood_count",
+        df2,
+    )
+
+    menu =  html.Div(
+                        id="settings",
+                        className="three columns",
+                        children=make_menu_layout(),
+                    )
+
+    horizontal_bar = HorizontalBar(
+        "Number of properties per owner",
+        "host_listings_neighbourhood_count",
+        df2,
+    )
 
     app.layout = html.Div(
         id="app-container",
@@ -38,14 +64,18 @@ if __name__ == "__main__":
                     html.H4(id="header_title", children="Airbnb in New York"),
                 ],
             ),
-
             # graphs
             html.Div(
                 id="graph-grid",
                 className="nine columns",
-                children=[scatterplot1,
-                    html.Div( id="settings", className="three columns", children=make_menu_layout()),
-                        scatterplot2, histogram, noise_map, scatterplot4],
+                children=[
+                    scatterplot1,
+                    menu,
+                    histogram,
+                    wordcloud,
+                    scattermap,
+                    horizontal_bar,
+                ],
             ),
         ],
     )
@@ -57,21 +87,27 @@ if __name__ == "__main__":
         Output(scatterplot1.html_id, "figure"),
         [
             Input("select-color-scatter-1", "value"),
-            Input(scatterplot2.html_id, "selectedData"),
+            Input(scatterplot1.html_id, "selectedData"),
         ],
     )
     def update_scatter_1(selected_color, selected_data):
         return scatterplot1.update(selected_color, selected_data)
 
-    @app.callback(
-        Output(scatterplot2.html_id, "figure"),
-        [
-            Input("select-color-scatter-2", "value"),
-            Input(scatterplot1.html_id, "selectedData"),
-        ],
-    )
-    def update_scatter_2(selected_color, selected_data):
-        return scatterplot2.update(selected_color, selected_data)
+    def update_map_view(map_view, map_title):
+        if map_view == 0:
+            map_new = "Fire alarms"
+        elif map_view == 1:
+            map_new = "Carbon monoxide monitors"
+        # elif map_view == 2:
+        else:
+            map_new = map_title
+
+        return map_new
+
+    def update_wc(neighbourhood):
+        img = BytesIO()
+        wordcloud.update(neighbourhood).save(img, format="PNG")
+        return 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
 
 
 
@@ -83,25 +119,48 @@ if __name__ == "__main__":
             Output("error", "children"),
             Output("zip_code_text", "value"),
             Output(histogram.html_id, "figure"),
-            Output(noise_map.html_id, "figure")
+            Output(horizontal_bar.html_id, "figure"),
+            Output(wordcloud.html_id, "src"),
+            Output(scattermap.html_id, "figure"),
+            Output("map_title", "children")
         ],
         [
-            Input("select_neigh", "value"), 
-            Input("zip_code_text", "value")
+            Input("select_neigh", "value"),
+            Input("zip_code_text", "value"),
+            Input("local_switch", "on"),
+            Input("map_view", "value"),
         ],
-        [
-            State("header_title", "children"),
-            State(histogram.html_id, "figure")
-        ],
+        [State("header_title", "children"), State(histogram.html_id, "figure"),
+        State(horizontal_bar.html_id, "figure"),
+        State(wordcloud.html_id, "src"), State("map_title", "children")],
     )
-    def update_neighbourhoods(select_name, zip_code_text, header_state, histogram_current):
+    def update_neighbourhoods(
+        select_name, zip_code_text, local_switch, map_view, header_state, histogram_current, hb_current, 
+        wordcloud_current, title_current
+    ):
+        if dash.callback_context.triggered_id == "map_view":
+            map_title_new = update_map_view(map_view, title_current)
+            return (
+                header_state,
+                None,
+                zip_code_text,
+                histogram_current,
+                hb_current,
+                wordcloud_current,
+                scattermap.update(map_view),
+                map_title_new
+            )
         if zip_code_text is not None:
             if (not zip_code_text.isdigit()) or (len(zip_code_text) != 5):
                 return (
                     header_state,
                     "The value entered is not a valid zip code.",
                     zip_code_text,
-                    histogram_current
+                    histogram_current,
+                    hb_current,
+                    wordcloud_current,
+                    scattermap.fig,
+                    title_current
                 )
             else:
                 # Load data
@@ -118,14 +177,45 @@ if __name__ == "__main__":
                         header_state,
                         "The value entered does not correspond to a New York neighbourhood.",
                         zip_code_text,
-                        histogram_current
+                        histogram_current,
+                        hb_current,
+                        wordcloud_current,
+                        scattermap.fig,
+                        title_current
                     )
                 else:
                     neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
-                    return "Airbnb in New York: " + neighbourhood, None, "", histogram.update(neighbourhood), noise_map.update()
+                    return (
+                        "Airbnb in New York: " + neighbourhood,
+                        None,
+                        "",
+                        histogram.update(neighbourhood, local_switch),
+                        horizontal_bar.update(None),
+                        update_wc(neighbourhood),
+                        scattermap.update(loc_change=True, neighbourhood=neighbourhood),
+                        title_current
+                    )
         elif select_name != "All":
-            return "Airbnb in New York: " + select_name, None, None, histogram.update(select_name), noise_map.update()
+            return (
+                "Airbnb in New York: " + select_name,
+                None,
+                None,
+                histogram.update(select_name, local_switch),
+                horizontal_bar.update(None),
+                update_wc(select_name),
+                scattermap.update(loc_change=True, neighbourhood=select_name),
+                title_current
+            )
         else:
-            return "Airbnb in New York", None, None, histogram.update(), noise_map.update()
+            return (
+                "Airbnb in New York",
+                None,
+                None,
+                histogram.update(None, local_switch),
+                horizontal_bar.update(None),
+                update_wc(None),
+                scattermap.update(loc_change=True),
+                title_current
+            )
 
     app.run_server(debug=False, dev_tools_ui=False)
