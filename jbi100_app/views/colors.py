@@ -1,7 +1,7 @@
 bg_colour = "#121212"
 card_colour = "#212121"
 txt_colour = "#f1f1f1"
-
+line_colour = "#424242"
 #
 marker_1 = "#0090e7"
 marker_2 = "#00d25b"

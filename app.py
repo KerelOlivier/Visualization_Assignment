@@ -226,6 +226,7 @@ if __name__ == "__main__":
                 title_current
             )
         else:
+            print("updating", select_name)
             map_title_new = update_map_view(map_view, title_current)
             return (
                 "Airbnb in New York",

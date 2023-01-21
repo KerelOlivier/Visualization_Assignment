@@ -37,8 +37,9 @@ class Map(html.Div):
 
         # check what data to use
         if self.nbh is not None:
+            print(self.nbh, type(self.df.neighbourhood_group), type(self.df.neighbourhood ))
             filter = self.df[
-                    (self.df.neighbourhood_group == self.nbh)
+                    (self.df.neighbourhood_group == self.nbh ) |
                     (self.df.neighbourhood == self.nbh)
                     ]
         else:
@@ -67,8 +68,7 @@ class Map(html.Div):
         center_lat = filter["latitude"].mean()
         center_lon = filter["longitude"].mean()
 
-        # center = {"lat":center_lat, "lon":center_lon}
-        center = {"lat": 40.705990161916645, "lon": -73.97582996116756}
+        center = {"lat":center_lat, "lon":center_lon}
 
         #print("step 2:", time.perf_counter()
 
