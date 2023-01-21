@@ -20,7 +20,7 @@ class MapGroup(html.Div):
             ],
         )
 
-  def update(self, map_mode='scatter', alarm_mode=None, loc_change=False, colours=[clrs.marker_2, clrs.marker_4], neighbourhood=None):
+  def update(self, map_mode='fire', alarm_mode=None, loc_change=False, colours=[clrs.marker_2, clrs.marker_4], neighbourhood=None):
     if map_mode == 'fire' or map_mode == 'co':
       self.html_id = self.scatter.html_id      
       self.fig = self.scatter.update(mode=map_mode, loc_change=loc_change, colours=colours, neighbourhood=neighbourhood)
