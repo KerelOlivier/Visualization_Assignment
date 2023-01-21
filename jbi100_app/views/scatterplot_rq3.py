@@ -113,7 +113,7 @@ class RQ3(html.Div):
                         self.a + self.b * self.x.max(),
                     ],
                     mode="lines",
-                    line=dict(color="rgb(200, 200, 200)", width=0.5),
+                    line=dict(color=clrs.line_colour, width=0.5),
                     showlegend=False,
                     hoverinfo="none",
                 )
@@ -148,6 +148,8 @@ class RQ3(html.Div):
                     hoverinfo="none",
                 )
             )
+
+        # Set green markers
         if neighbourhood is not None:
             self.fig["data"].append(
                 dict(
