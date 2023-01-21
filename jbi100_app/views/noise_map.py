@@ -29,7 +29,7 @@ class NoiseMap(html.Div):
                     color_continuous_scale="Viridis",
                     range_color=(0, 200),
                     mapbox_style="carto-darkmatter",
-                    zoom=10, center = {"lat": 40.705990161916645, "lon": -73.97582996116756},
+                    zoom=9, center = {"lat": 40.705990161916645, "lon": -73.97582996116756},
                     opacity=0.5,
                     hover_data=["area", "incident_cnt", "density"],
                     labels={'incident_cnt':'complaints', 'density':'complaints/km^2'}

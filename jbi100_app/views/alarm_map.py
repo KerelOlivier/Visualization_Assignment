@@ -37,9 +37,9 @@ class Map(html.Div):
 
         # check what data to use
         if self.nbh is not None:
-             filter = self.df[
+            filter = self.df[
                     (self.df.neighbourhood_group == self.nbh)
-                    | (self.df.neighbourhood == self.nbh)
+                    (self.df.neighbourhood == self.nbh)
                     ]
         else:
             filter = self.df
@@ -67,7 +67,8 @@ class Map(html.Div):
         center_lat = filter["latitude"].mean()
         center_lon = filter["longitude"].mean()
 
-        center = {"lat":center_lat, "lon":center_lon}
+        # center = {"lat":center_lat, "lon":center_lon}
+        center = {"lat": 40.705990161916645, "lon": -73.97582996116756}
 
         #print("step 2:", time.perf_counter()
 
@@ -103,12 +104,12 @@ class Map(html.Div):
 
         self.fig.update_layout(mapbox = {
             "center": center,
-            "zoom": 7
+            "zoom": 9
         })
 
         self.fig.update_traces(mode='markers', marker_size=10)
         #print("step 5:", time.perf_counter())
-        self.fig.update_layout(mapbox_style="open-street-map")
+        self.fig.update_layout(mapbox_style="carto-darkmatter")
 
 
         return self.fig

@@ -2,10 +2,9 @@ from jbi100_app.main import app
 from jbi100_app.views.menu import make_menu_layout
 from jbi100_app.views.scatterplot import Scatterplot
 from jbi100_app.views.histogram import Histogram
-from jbi100_app.views.noise_map import NoiseMap
 from jbi100_app.views.horizontal_bar import HorizontalBar
 from jbi100_app.views.word_cloud import WordsCloud
-from jbi100_app.views.map import Map
+from jbi100_app.views.map_group import MapGroup
 
 import dash
 from dash import html
@@ -31,12 +30,10 @@ if __name__ == "__main__":
 
     # Instantiate custom views
     scatterplot1 = Scatterplot("Scatterplot 1", "sepal_length", "sepal_width", df)
-    scattermap = Map("Map", df2)
-    #scatterplot3 = Scatterplot("Scatterplot 3", "petal_length", "petal_width", df)
     wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
+    mapgroup = MapGroup(df2)
 
-    noise_map = NoiseMap("Noise map")
-    noise_map.update()
+
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",
         "host_listings_neighbourhood_count",
@@ -73,7 +70,7 @@ if __name__ == "__main__":
                     menu,
                     histogram,
                     wordcloud,
-                    scattermap,
+                    mapgroup,
                     horizontal_bar,
                 ],
             ),
@@ -121,7 +118,7 @@ if __name__ == "__main__":
             Output(histogram.html_id, "figure"),
             Output(horizontal_bar.html_id, "figure"),
             Output(wordcloud.html_id, "src"),
-            Output(scattermap.html_id, "figure"),
+            Output(mapgroup.html_id, "figure"),
             Output("map_title", "children")
         ],
         [
@@ -159,7 +156,7 @@ if __name__ == "__main__":
                     histogram_current,
                     hb_current,
                     wordcloud_current,
-                    scattermap.fig,
+                    mapgroup.fig,
                     title_current
                 )
             else:
@@ -180,7 +177,7 @@ if __name__ == "__main__":
                         histogram_current,
                         hb_current,
                         wordcloud_current,
-                        scattermap.fig,
+                        mapgroup.fig,
                         title_current
                     )
                 else:
@@ -192,7 +189,7 @@ if __name__ == "__main__":
                         histogram.update(neighbourhood, local_switch),
                         horizontal_bar.update(None),
                         update_wc(neighbourhood),
-                        scattermap.update(loc_change=True, neighbourhood=neighbourhood),
+                        mapgroup.update(loc_change=True, neighbourhood=neighbourhood),
                         title_current
                     )
         elif select_name != "All":
@@ -203,7 +200,7 @@ if __name__ == "__main__":
                 histogram.update(select_name, local_switch),
                 horizontal_bar.update(None),
                 update_wc(select_name),
-                scattermap.update(loc_change=True, neighbourhood=select_name),
+                mapgroup.update(loc_change=True, neighbourhood=select_name),
                 title_current
             )
         else:
@@ -214,7 +211,7 @@ if __name__ == "__main__":
                 histogram.update(None, local_switch),
                 horizontal_bar.update(None),
                 update_wc(None),
-                scattermap.update(loc_change=True),
+                mapgroup.update(loc_change=True),
                 title_current
             )
 
