@@ -210,7 +210,7 @@ if __name__ == "__main__":
                         histogram.update(neighbourhood, local_switch),
                         horizontal_bar.update(neighbourhood),  
                         update_wc(neighbourhood),                    
-                        mapgroup.update(loc_change=True, neighbourhood=neighbourhood),
+                        mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=neighbourhood),
                         rq3.update(neighbourhood),
                         title_current
                     )
@@ -222,7 +222,7 @@ if __name__ == "__main__":
                 histogram.update(select_name, local_switch),
                 horizontal_bar.update(select_name),
                 update_wc(select_name),                
-                mapgroup.update(loc_change=True, neighbourhood=select_name),
+                mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=select_name),
                 rq3.update(select_name),
                 title_current
             )
@@ -236,7 +236,7 @@ if __name__ == "__main__":
                 histogram.update(None, local_switch),
                 horizontal_bar.update(None),
                 update_wc(None),
-                mapgroup.update(loc_change=True),
+                mapgroup.update(map_mode=map_view, loc_change=True),
                 rq3.update(None),
                 map_title_new
             )

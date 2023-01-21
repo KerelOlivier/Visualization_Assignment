@@ -7,10 +7,10 @@ import dash_daq as daq
 
 
 class MapGroup(html.Div):
-  def __init__(self, alarm_df) -> None:
+  def __init__(self, df) -> None:
     
-    self.scatter = Map("alarm map", alarm_df)
-    self.noise = NoiseMap("noise map")
+    self.scatter = Map("alarm map", df)
+    self.noise = NoiseMap("noise map", df)
     self.html_id = self.scatter.html_id
     super().__init__(
             className="graph_card",
@@ -26,5 +26,5 @@ class MapGroup(html.Div):
       self.fig = self.scatter.update(mode=map_mode, loc_change=loc_change, colours=colours, neighbourhood=neighbourhood)
     else:
       self.html_id = self.noise.html_id
-      self.fig = self.noise.update()
+      self.fig = self.noise.update(loc_change=loc_change, neighbourhood=neighbourhood)
     return self.fig
