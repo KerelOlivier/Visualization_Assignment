@@ -189,6 +189,8 @@ if __name__ == "__main__":
         scatterplot_current,
         title_current,
     ):
+
+        map_title_new = update_map_view(map_view, title_current)
         if dash.callback_context.triggered_id == "histogram":
             print(histo_click)
             prop_cnt = histo_click['points'][0]['x']
@@ -201,7 +203,7 @@ if __name__ == "__main__":
                 wordcloud_current,
                 mapgroup.fig,
                 scatterplot_current,
-                title_current,
+                map_title_new,
                 ""                   
             )
 
@@ -249,7 +251,7 @@ if __name__ == "__main__":
                     wordcloud_current,
                     mapgroup.fig,
                     scatterplot_current,
-                    title_current,
+                    map_title_new,
                     ""
                     
                 )
@@ -272,7 +274,7 @@ if __name__ == "__main__":
                         wordcloud_current,
                         mapgroup.fig,                        
                         scatterplot_current,
-                        title_current,
+                        map_title_new,
                         ""
                     )
                 else:
@@ -286,7 +288,7 @@ if __name__ == "__main__":
                         update_wc(neighbourhood),                    
                         mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=neighbourhood),
                         rq3.update(neighbourhood),
-                        title_current,
+                        map_title_new,
                         ""
                     )
         elif select_name != "All":
@@ -299,7 +301,7 @@ if __name__ == "__main__":
                 update_wc(select_name),                
                 mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=select_name),
                 rq3.update(select_name),
-                title_current,
+                map_title_new,
                 ""
             )
         else:
