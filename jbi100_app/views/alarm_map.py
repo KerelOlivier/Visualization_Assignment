@@ -15,7 +15,7 @@ class Map(html.Div):
         super().__init__(
             className="graph_card",
             children=[
-                html.H6("Fire alarms", id="map_title"),
+                html.H6("Fire alarms"),
                 dcc.Graph(id=self.html_id)
             ],
         )

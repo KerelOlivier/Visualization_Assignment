@@ -92,13 +92,13 @@ if __name__ == "__main__":
 
     def update_map_view(map_view, map_title):
         print("map: ", map_view)
-        if map_view == 0:
+        if map_view == 'fire':
             map_new = "Fire alarms"
-        elif map_view == 1:
+        elif map_view == 'co':
             map_new = "Carbon monoxide monitors"
         # elif map_view == 2:
         else:
-            map_new = map_title
+            map_new = 'noise complaints density and airbnb locations '
         return map_new
 
     def update_wc(neighbourhood):
@@ -226,6 +226,7 @@ if __name__ == "__main__":
                 title_current
             )
         else:
+            map_title_new = update_map_view(map_view, title_current)
             return (
                 "Airbnb in New York",
                 None,
@@ -235,7 +236,7 @@ if __name__ == "__main__":
                 update_wc(None),
                 mapgroup.update(loc_change=True),
                 rq3.update(None),
-                title_current
+                map_title_new
             )
 
     app.run_server(debug=False, dev_tools_ui=False)
