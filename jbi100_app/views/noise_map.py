@@ -13,6 +13,8 @@ class NoiseMap(html.Div):
     def __init__(self, name):
         self.html_id = name.lower().replace(" ", "-")
         self.df = pd.read_csv("data/noise.csv")
+        self.bnb_loc_df = pd.read_csv("data/airbnb_open_data_full_clean.csv")
+        self.bnb_loc_df = self.bnb_loc_df[["name", "longitude", "latitude"]]
         with open('data/voronoi.geojson' , 'r') as file:
             self.voronoi = json.load(file)
         # Equivalent to `html.Div([...])`
@@ -28,13 +30,23 @@ class NoiseMap(html.Div):
                     range_color=(0, 200),
                     mapbox_style="carto-darkmatter",
                     zoom=10, center = {"lat": 40.705990161916645, "lon": -73.97582996116756},
-                    opacity=0.2,
+                    opacity=0.5,
                     hover_data=["area", "incident_cnt", "density"],
                     labels={'incident_cnt':'complaints', 'density':'complaints/km^2'}
-                    )        
+                    )
 
-    def update(self):
-        
+        self.fig.update_traces(marker_line_width=0)
+        self.scatter = px.scatter_mapbox(self.bnb_loc_df,
+                                        lat="latitude",lon="longitude",
+                                        hover_name="name",
+                                        color_discrete_sequence=["red"],
+                                        hover_data={'latitude':False, 
+                                                    'longitude':False},
+                                        opacity=0.5,
+                                        mapbox_style="carto-darkmatter")
+        self.fig.add_trace(self.scatter.data[0])
+
+    def update(self, scatter on):
         self.fig.update_layout(
             margin={"r":0,"t":0,"l":0,"b":0},
             yaxis_zeroline=False,
@@ -49,9 +61,11 @@ class NoiseMap(html.Div):
                 tickcolor="#f1f1f1",
                 tickfont=dict(color="#f1f1f1")
             ))
-        self.fig.update_traces(marker_line_width=0)
+        
         self.fig.update_xaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
         self.fig.update_yaxes(fixedrange=True, gridcolor="#424242", color="#f1f1f1")
+
+        
         # x_values = self.df[self.feature_x]
         # y_values = self.df[self.feature_y]
         # self.fig.add_trace(go.Scatter(
