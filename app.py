@@ -91,6 +91,7 @@ if __name__ == "__main__":
         return scatterplot1.update(selected_color, selected_data)
 
     def update_map_view(map_view, map_title):
+        print("map: ", map_view)
         if map_view == 0:
             map_new = "Fire alarms"
         elif map_view == 1:
@@ -144,7 +145,7 @@ if __name__ == "__main__":
                 histogram_current,
                 hb_current,
                 wordcloud_current,
-                scattermap.update(map_view),
+                mapgroup.update(map_view),
                 map_title_new
             )
         if zip_code_text is not None:

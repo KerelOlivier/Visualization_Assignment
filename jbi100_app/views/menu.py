@@ -71,9 +71,8 @@ def generate_control_card():
             dcc.RadioItems(
                 id="map_view",
                 options=[
-                    {'label': 'Fire alarms', 'value': 0},
-                    {'label': 'Carbon monoxide monitors', 'value': 1},
-                    {'label': 'Noise complaints', 'value': 2},
+                    {'label': 'Fire and CO alarms', 'value': 'scatter'},
+                    {'label': 'Noise complaints', 'value': 'noise'},
                 ],
                 value=0
 
