@@ -224,6 +224,7 @@ if __name__ == "__main__":
 
         if dash.callback_context.triggered_id == "map_view":
             map_title_new = update_map_view(map_view, title_current)
+            print(scatterplot_current)
             return (
                 header_state,
                 None,
@@ -232,7 +233,7 @@ if __name__ == "__main__":
                 hb_current,
                 wordcloud_current,
                 mapgroup.update(map_view),
-                scatterplot_current,
+                rq3.fig,
                 map_title_new,
                 ""
             )

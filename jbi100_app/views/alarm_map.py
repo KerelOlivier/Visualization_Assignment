@@ -54,6 +54,7 @@ class Map(html.Div):
             "Queens"
         }
         # we also need to know the zoom level and center
+        zoom = 9
         if loc_change:
             if self.nbh is None:
                 zoom = 9

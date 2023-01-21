@@ -24,3 +24,5 @@ marker_3 = "#8f5fe8"
 marker_4 = "#fc424a"  #red
 marker_5 = "#ffab00"
 marker_off = "#a8a8a8"  #grey
+
+colour_gradient = "Viridis" 
