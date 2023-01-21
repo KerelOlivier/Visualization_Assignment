@@ -60,6 +60,10 @@ h5 {
 }
 
 .graph_card {
+    /* display: inline-flex;
+    flex-direction: column;
+    justify-content: start; */
+    align-items: center;
     background-color: #212121;
     border-radius: 0.675rem;
     padding: 1rem;
@@ -69,12 +73,13 @@ h5 {
 }
 
 #wordcloud{
-    margin: 0;
-    position: relative;
+    margin: 10px;
+    width:100%
+    /*position: relative;
     top: 40%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
 }
 
 
