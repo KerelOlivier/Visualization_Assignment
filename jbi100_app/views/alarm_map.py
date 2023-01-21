@@ -52,7 +52,6 @@ class Map(html.Div):
             "Staten Island",
             "Queens"
         }
-
         # we also need to know the zoom level and center
         if loc_change:
             if self.nbh is None:
@@ -104,7 +103,7 @@ class Map(html.Div):
 
         self.fig.update_layout(mapbox = {
             "center": center,
-            "zoom": 9
+            "zoom": zoom
         })
 
         self.fig.update_traces(mode='markers', marker_size=10)
