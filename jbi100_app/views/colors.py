@@ -4,9 +4,10 @@ txt_colour = "#f1f1f1"
 line_colour = "#424242"
 #
 marker_1 = "#0090e7"
-marker_2 = "#00d25b"
+marker_2 = "#00d25b"  #green
 marker_3 = "#8f5fe8"
-marker_4 = "#fc424a"
+marker_4 = "#fc424a"  #red
 marker_5 = "#ffab00"
+marker_off = "#a8a8a8"  #grey
 
 colour_gradient = "Viridis"

@@ -69,7 +69,7 @@ class RQ3(html.Div):
                     mode="markers",
                     marker=dict(
                         size=size,
-                        color=clrs.marker_1,
+                        color=clrs.marker_off,
                         line=dict(width=0.5, color="white"),
                     ),
                 )
@@ -84,8 +84,8 @@ class RQ3(html.Div):
                 yaxis=dict(
                     title="Number of hotels",
                     fixedrange=True,
-                    gridcolor="#424242",
-                    color="#f1f1f1",
+                    gridcolor=clrs.line_colour,
+                    color=clrs.txt_colour,
                 ),
                 # title=dict(
                 #    text="Number of <br> Airbnbs vs Hotels <br> per neighbourhood",
@@ -164,7 +164,7 @@ class RQ3(html.Div):
                     mode="markers",
                     marker=dict(
                         size=size,
-                        color="green",
+                        color=clrs.marker_2,
                         line=dict(width=0.5, color="white"),
                     ),
                 )
