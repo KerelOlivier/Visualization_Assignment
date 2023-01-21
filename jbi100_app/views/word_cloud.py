@@ -1,12 +1,10 @@
-from dash import dcc, html
-from dash_holoniq_wordcloud import DashWordcloud
-import plotly.graph_objects as go
+from dash import html
 from wordcloud import WordCloud
-import pandas as pd
 import re
 from nltk.corpus import stopwords
 import nltk
 import jbi100_app.views.colors as clrs
+
 
 class WordsCloud(html.Div):
     def __init__(self, name, title, df):
@@ -19,22 +17,17 @@ class WordsCloud(html.Div):
         # Equivalent to `html.Div([...])`
         super().__init__(
             className="graph_card",
-            children=[
-                html.H6(title),
-                html.Img(id=self.html_id)
-            ],
+            children=[html.H6(title), html.Img(id=self.html_id)],
         )
-        
-        
 
     def update(self, neighbourhood=None):
 
         # get the relevant data
         if neighbourhood is not None:
             filter = self.df[
-                    (self.df.neighbourhood_group == neighbourhood)
-                    | (self.df.neighbourhood == neighbourhood)
-                    ]
+                (self.df.neighbourhood_group == neighbourhood)
+                | (self.df.neighbourhood == neighbourhood)
+            ]
         else:
             filter = self.df
 
@@ -42,10 +35,18 @@ class WordsCloud(html.Div):
         t = self.get_text(filter).split()
         freqs = nltk.FreqDist(t)
         x = freqs.most_common(30)
-        boo = {k: v for k,v in x}
+        ## Applying Steven's power law
+        boo = {k: v ** (1 / 0.7) for k, v in x}
+        max_value = max(x,key=lambda item:item[1])[1]
+        color = {k: round(100*v/max_value, 0) for k, v in x}
 
         # create a wordcloud
-        wc = WordCloud(background_color=clrs.card_colour, width=300, height=360)
+        wc = WordCloud(
+            background_color=clrs.card_colour,
+            width=300,
+            height=360,
+            color_func=self.my_tf_color_func(color),
+        )
         wc.fit_words(boo)
 
         return wc.to_image()
@@ -53,18 +54,24 @@ class WordsCloud(html.Div):
     def get_text(self, df):
 
         # join all names in the data together
-        text = ' '.join(df["name"].astype(str))
+        text = " ".join(df["name"].astype(str))
 
         # remove stop words, special symbols, punctuation, and extra spaces
-        pattern = re.compile(r'\b(' + r'|'.join(stopwords.words('english')) + r')\b\s*')
-        new_text = pattern.sub('', text)
+        pattern = re.compile(r"\b(" + r"|".join(stopwords.words("english")) + r")\b\s*")
+        new_text = pattern.sub("", text)
         x = re.sub("w[^A-Za-z0-9 \n\.]", "", new_text)
         final_text = re.sub("[^A-Za-z0-9 \n\.]", "", x)
         really_final_text = re.sub(" +", " ", final_text)
 
         # finally, set everything to lowercase
-        really_final_text.lower()
+        really_final_text = really_final_text.lower()
 
         return really_final_text
-        
 
+    def my_tf_color_func(self, dictionary):
+        def my_tf_color_func_inner(
+            word, random_state=None, **kwargs
+        ):
+            return "hsl(0, 70%%, %d%%)" % (dictionary[word])
+
+        return my_tf_color_func_inner
