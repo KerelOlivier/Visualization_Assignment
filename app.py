@@ -165,7 +165,8 @@ if __name__ == "__main__":
                 scatterplot_current,
                 map_title_new
             )
-        if zip_code_text is not None:
+        print("zip:", zip_code_text)
+        if zip_code_text is not None and zip_code_text is not "":
             if (not zip_code_text.isdigit()) or (len(zip_code_text) != 5):
                 return (
                     header_state,
