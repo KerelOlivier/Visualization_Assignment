@@ -234,7 +234,7 @@ if __name__ == "__main__":
                 histogram_current,
                 hb_current,
                 wordcloud_current,
-                mapgroup.update(map_view),
+                mapgroup.update(map_view, neighbourhood=select_name, loc_change=True),
                 rq3.fig,
                 map_title_new,
                 ""
