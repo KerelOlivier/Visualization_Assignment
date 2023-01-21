@@ -54,7 +54,6 @@ class HorizontalBar(html.Div):
                     x=filter["local_number"],
                     name="local",
                     orientation="h",
-                    marker_color=clrs.marker_5,
                     customdata=filter["total_number"],
                     hovertemplate="%{y} owns %{x} properties in the local area, and %{customdata} in total in NY.<extra></extra>",
                 )
@@ -66,7 +65,6 @@ class HorizontalBar(html.Div):
                     x=filter["diff_number"],
                     name="other areas",
                     orientation="h",
-                    marker_color=clrs.marker_5,
                     customdata=filter[["local_number", "total_number"]],
                     hovertemplate="%{y} owns %{customdata[0]} properties in the local area, and %{customdata[1]} in total in NY.<extra></extra>",
                 )
@@ -104,5 +102,9 @@ class HorizontalBar(html.Div):
             bargap=0.8,
             height=max(500, length * 30),
         )
+
+        self.fig.update_xaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
+        self.fig.update_yaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
+        self.fig.update_traces(marker_color=clrs.marker_5)
 
         return self.fig
