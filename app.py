@@ -51,6 +51,8 @@ def update_colors(theme="default"):
     clrs.colour_gradient = "Viridis"
 
 if __name__ == "__main__":
+    title = "Visualizing the NYC Airbnb debate"
+
     # Create data
     df = px.data.iris()
     APP_PATH = str(pathlib.Path(__file__).parent.resolve())
@@ -67,39 +69,34 @@ if __name__ == "__main__":
     # Instantiate custom views
     wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
     mapgroup = MapGroup(df2)
-    # can change it later
     rq3 = RQ3(
         "Number of Airbnbs vs Hotels per neighbourhood",
         "airbnb_counts_per_neighbourhood",
         "hotel_counts_per_neighbourhood",
         df_rq3,
     )
-
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",
         "host_listings_neighbourhood_count",
         df2,
     )
-
     menu =  html.Div(
                         id="settings",
                         className="three columns",
                         children=make_menu_layout(),
                     )
-
     horizontal_bar = HorizontalBar(
         "Number of properties per owner",
         "host_listings_neighbourhood_count",
         df2,
     )
-
     app.layout = html.Div(
         id="app-container",
         children=[
             html.Div(
                 id="header",
                 children=[
-                    html.H4(id="header_title", children="Airbnb in New York"),
+                    html.H4(id="header_title", children=title),
                 ],
             ),
             # graphs
@@ -212,7 +209,7 @@ if __name__ == "__main__":
             update_colors(cb_mode)
             map_title_new = update_map_view(map_view, title_current)
             return (
-                "Airbnb in New York",
+                title,
                 None,
                 None,
                 histogram.update(None, local_switch),
@@ -240,7 +237,7 @@ if __name__ == "__main__":
                 ""
             )
         print("zip:", zip_code_text)
-        if zip_code_text is not None and zip_code_text is not "":
+        if zip_code_text != None and zip_code_text != "":
             if (not zip_code_text.isdigit()) or (len(zip_code_text) != 5):
                 return (
                     header_state,
@@ -280,7 +277,7 @@ if __name__ == "__main__":
                 else:
                     neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
                     return (
-                        "Airbnb in New York: " + neighbourhood,
+                        f"{title}: {neighbourhood}",
                         None,
                         "",
                         histogram.update(neighbourhood, local_switch),
@@ -293,7 +290,7 @@ if __name__ == "__main__":
                     )
         elif select_name != "All":
             return (
-                "Airbnb in New York: " + select_name,
+                f"{title}: {select_name}",
                 None,
                 None,
                 histogram.update(select_name, local_switch),
@@ -308,7 +305,7 @@ if __name__ == "__main__":
             print("updating", select_name)
             map_title_new = update_map_view(map_view, title_current)
             return (
-                "Airbnb in New York",
+                title,
                 None,
                 None,
                 histogram.update(None, local_switch),
