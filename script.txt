@@ -1,9 +1,21 @@
+# Big line
+- Introduction of group, people, and use the name of the tool
+- Quick guide for the main page (1-2 different neighbourhoods)
+- Five tasks under the same neighbourhood(group), zipcode
+    - Task 1(noise) - 
+    - Task 2(histogram) - colourblind off -> on
+    - Task 3(scatterplot-hotel) - show neighbourhood & neighbourhood group
+    - Task 4(scatterplot-alarms) - colourblind off -> on
+    - Task 5(wordcloud) - 
+	
+100 words per minute. Upto 500 words
 
-Song: https://www.youtube.com/results?search_query=darth+vader+song
+# Song: https://www.youtube.com/results?search_query=darth+vader+song
 
+# Main Script
 Hello, we are from group 73 with Olivier, Iona, Dayeong, and Sietske. 
 We would like to introduce our visualization tool (NAME).
- 
+
 On the top left-hand side of the page, you can see the title
 which indicates the neighbourhood or group you are looking at. 
 You can see five different plots with titles and 
