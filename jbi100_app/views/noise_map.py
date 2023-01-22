@@ -106,5 +106,4 @@ class NoiseMap(html.Div):
                 tickcolor=clrs.txt_colour,
                 tickfont=dict(color=clrs.txt_colour)
             ))
-        print("updated noise map", len(self.fig.data))
         return self.fig

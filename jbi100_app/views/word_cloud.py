@@ -75,6 +75,6 @@ class WordsCloud(html.Div):
         def my_tf_color_func_inner(
             word, random_state=None, **kwargs
         ):
-            return "hsl(0, 70%%, %d%%)" % (dictionary[word])
+            return "hsl(202, 100%%, %d%%)" % (dictionary[word])
 
         return my_tf_color_func_inner
