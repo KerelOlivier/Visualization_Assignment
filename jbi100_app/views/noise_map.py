@@ -29,10 +29,12 @@ class NoiseMap(html.Div):
         )
 
     def update(self, loc_change=False, neighbourhood=None):
-
+        
+        # Set the neighbourhood if changed
         if loc_change:
             self.nbh = neighbourhood
 
+        # Filter data corresponding to the neighbourhood 
         if self.nbh is not None:
             filter = self.bnb_df[
                     (self.bnb_df.neighbourhood_group == self.nbh ) |
@@ -41,6 +43,7 @@ class NoiseMap(html.Div):
         else:
             filter = self.bnb_df
 
+        # Determine the data geographical center
         center_lat = filter["latitude"].mean()
         center_lon = filter["longitude"].mean()
 
@@ -54,8 +57,8 @@ class NoiseMap(html.Div):
             "Queens"
         } 
 
+        # Determine the zoom level
         zoom = 9
-        # we also need to know the zoom level and center
         if self.nbh is None:
             zoom = 9
         else:
@@ -64,29 +67,31 @@ class NoiseMap(html.Div):
             else:
                 zoom = 14
 
+        # Creat the choropleth layer
         self.fig = px.choropleth_mapbox(self.df, geojson=self.voronoi, locations='id', color='density',
                     color_continuous_scale=clrs.colour_gradient,
                     range_color=(0, 200),
                     mapbox_style="carto-darkmatter",
                     zoom=zoom, center = center,
                     opacity=0.5,
-                    hover_data=["area", "incident_cnt", "density"],
-                    labels={'incident_cnt':'complaints', 'density':'complaints/km^2'}
+                    hover_data={"area":False, "incident_cnt":True, "density":False, "id":False},
+                    labels={'incident_cnt':'complaints'}
                     )
 
         self.fig.update_traces(marker_line_width=0)
+
+        # create the scatter layer
         self.scatter = px.scatter_mapbox(filter,
                                         lat="latitude",lon="longitude",
                                         hover_name="name",
                                         color_discrete_sequence=[clrs.marker_4],
                                         hover_data={'latitude':False, 
                                                     'longitude':False},
-                                        opacity=0.5,
                                         mapbox_style="carto-darkmatter")
 
         self.fig.add_trace(self.scatter.data[0])   
 
-
+        #update the layout
         self.fig.update_layout(
             margin={"r":0,"t":0,"l":0,"b":0},
             yaxis_zeroline=False,
@@ -101,5 +106,4 @@ class NoiseMap(html.Div):
                 tickcolor=clrs.txt_colour,
                 tickfont=dict(color=clrs.txt_colour)
             ))
-        print(type(self.fig))
         return self.fig
