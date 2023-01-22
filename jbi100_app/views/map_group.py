@@ -28,4 +28,5 @@ class MapGroup(html.Div):
     else:
       self.html_id = self.noise.html_id
       self.fig = self.noise.update(loc_change=loc_change, neighbourhood=neighbourhood)
+    print(len(self.fig.data))
     return self.fig

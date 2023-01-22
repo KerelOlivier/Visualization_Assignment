@@ -66,7 +66,7 @@ class NoiseMap(html.Div):
                 zoom = 11
             else:
                 zoom = 14
-
+        
         # Creat the choropleth layer
         self.fig = px.choropleth_mapbox(self.df, geojson=self.voronoi, locations='id', color='density',
                     color_continuous_scale=clrs.colour_gradient,
@@ -106,4 +106,5 @@ class NoiseMap(html.Div):
                 tickcolor=clrs.txt_colour,
                 tickfont=dict(color=clrs.txt_colour)
             ))
+        print("updated noise map", len(self.fig.data))
         return self.fig
