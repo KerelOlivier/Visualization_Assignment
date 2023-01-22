@@ -1,0 +1,50 @@
+
+Song: https://www.youtube.com/results?search_query=darth+vader+song
+
+Hello, we are from group 73 with Olivier, Iona, Dayeong, and Sietske. 
+We would like to introduce our visualization tool (NAME).
+ 
+On the top left-hand side of the page, you can see the title
+which indicates the neighbourhood or group you are looking at. 
+You can see five different plots with titles and 
+a dashboard with a drop-down menu and checkboxes. 
+You can type in a zipcode, or type neighbourhood or group 
+regardless of capital letters and click on it, 
+and the title and plots will be updated accordingly. 
+The other checkboxes will be explained further while exploring the plots.
+ 
+Now, we will explore the five different plots with different tasks.
+First, we enter 11105 in the zipcode field, 
+check the noise complaints in the dashboard, 
+and look at this plot. 
+Some people might think that Airbnbs cause many noises, 
+but we can see that the majority of them are located in relatively quiet areas 
+by looking at the density. 
+Hovering over each point shows the airbnbs' name.
+ 
+Next, we click on the enabled colourblind mode, 
+scroll or type in Battery Park City. 
+When we hover over, we can see that about 70 local hosts own Airbnbs on this plot. 
+We click on the far left bar, and the graph below shows which hosts own how many Airbnbs. 
+We can observe that one host owns a lot of Airbnbs, 
+including in other neighbourhoods.
+ 
+We disable the colourblind mode, enter Central Park, 
+and then we can see one dot highlighted as green. 
+Hovering over it shows the numbers of Airbnbs and Hotels. 
+We can also see the white regression line, 
+so we can observe that there are more Airbnbs for all neighbourhoods. 
+If we enter Bronx, then it shows the relations with other neighbourhood groups.
+ 
+We enable the colourblind mode again, enter Bedford-Stuyvesant, 
+and check the Fire alarm or CO monitor. 
+Hovering over each dot shows the exact coordinates of each Airbnb. 
+And we can observe that there are only a few that don't have safety measures.
+ 
+Lastly, we disable the colourblind mode and enter Hunts Point. 
+This neighbourhood has a relatively high crime rate in New York. 
+We can see some positive words 'travelerdream, affordable' and 'prolonged' (is it negative?).
+We also enter Mott Haven and can see many positive words 
+like 'lovely, charming, cozy' with different sizes of fonts and colours reflected by power law.
+ 
+Thank you for watching, and don't forget to give us 110 points.
