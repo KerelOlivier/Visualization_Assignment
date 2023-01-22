@@ -25,7 +25,6 @@ class Map(html.Div):
 
     def update(self, mode=None, loc_change=False, colours=[clrs.marker_2, clrs.marker_4], neighbourhood=None):
         colours=[clrs.marker_2, clrs.marker_4]
-        print(colours)
         self.fig = go.Figure()
 
         # we are now changing the location to use
@@ -38,7 +37,6 @@ class Map(html.Div):
 
         # check what data to use
         if self.nbh is not None:
-            print(self.nbh, type(self.df.neighbourhood_group), type(self.df.neighbourhood ))
             filter = self.df[
                     (self.df.neighbourhood_group == self.nbh ) |
                     (self.df.neighbourhood == self.nbh)
@@ -77,14 +75,11 @@ class Map(html.Div):
         if self.mode == 'fire':
             # fire alarm node         
             filter["colour"] = filter["has_fire_alarm"].replace(to_replace=marker_colours)
+            hover_txt = filter.has_fire_alarm.astype(str)
         elif self.mode == 'co':
             # co monitor mode
             filter["colour"] = filter["has_co_monitor"].replace(to_replace=marker_colours)
-        #elif self.mode == 2:
-            # noise complaints mode
-
-        #print("step 3:", time.perf_counter())
-
+            hover_txt = filter.has_co_monitor.astype(str)
 
         # now create the scattermap (this is the slowest thing)
         self.fig.add_trace(go.Scattermapbox(
@@ -92,11 +87,10 @@ class Map(html.Div):
                             lon=filter.longitude,
                             marker_color=filter.colour,
                             marker_allowoverlap=False,
-                            hovertext=filter.id,
+                            hoverinfo="text",
+                            hovertext=hover_txt,
 
         ))
-
-        #print("step 4:", time.perf_counter())
 
         # set the layout correctly with zoom and center
         self.fig.update_layout(margin={"r":0, "t":0, "l":0, "b":0})
@@ -107,7 +101,6 @@ class Map(html.Div):
         })
 
         self.fig.update_traces(mode='markers', marker_size=10)
-        #print("step 5:", time.perf_counter())
         self.fig.update_layout(mapbox_style="carto-darkmatter")
 
 

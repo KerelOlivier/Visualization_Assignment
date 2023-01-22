@@ -65,7 +65,7 @@ class Histogram(html.Div):
             go.Histogram(
                 histfunc="count",
                 x=values,
-                marker_color=clrs.marker_5,
+                marker_color=clrs.marker_1,
                 hovertemplate="%{y} Airbnb owner(s) own(s) %{x} properties in the selected area.<extra></extra>",
             ),
             

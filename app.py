@@ -20,37 +20,39 @@ import pandas as pd
 
 
 def update_colors(theme="default"):
-  if theme == "cb_mode":
-    clrs.bg_colour = "#121212"
-    clrs.card_colour = "#212121"
-    clrs.txt_colour = "#f1f1f1"
-    clrs.line_colour = "#424242"
-    #
-    clrs.marker_1 = "#56b4e9"
-    clrs.marker_2 = "#009e73"  #green
-    clrs.marker_3 = "#f0e442"
-    clrs.marker_4 = "#d55e00"  #red
-    clrs.marker_5 = "#cc79a7"
-    clrs.marker_off = "#a8a8a8"  #grey
+    if theme == "cb_mode":
+        clrs.bg_colour = "#121212"
+        clrs.card_colour = "#212121"
+        clrs.txt_colour = "#f1f1f1"
+        clrs.line_colour = "#424242"
+        #
+        clrs.marker_1 = "#56b4e9"
+        clrs.marker_2 = "#009e73"  #green
+        clrs.marker_3 = "#f0e442"
+        clrs.marker_4 = "#d55e00"  #red
+        clrs.marker_5 = "#cc79a7"
+        clrs.marker_off = "#a8a8a8"  #grey
 
-    clrs.colour_gradient = "Viridis"
+        clrs.colour_gradient = "Viridis"
 
-  else: #default colors
-    clrs.bg_colour = "#121212"
-    clrs.card_colour = "#212121"
-    clrs.txt_colour = "#f1f1f1"
-    clrs.line_colour = "#424242"
-    #
-    clrs.marker_1 = "#0090e7"
-    clrs.marker_2 = "#00d25b"  #green
-    clrs.marker_3 = "#8f5fe8"
-    clrs.marker_4 = "#fc424a"  #red
-    clrs.marker_5 = "#ffab00"
-    clrs.marker_off = "#a8a8a8"  #grey
+    else: #default colors
+        clrs.bg_colour = "#121212"
+        clrs.card_colour = "#212121"
+        clrs.txt_colour = "#f1f1f1"
+        clrs.line_colour = "#424242"
+        #
+        clrs.marker_1 = "#0090e7"
+        clrs.marker_2 = "#00d25b"  #green
+        clrs.marker_3 = "#8f5fe8"
+        clrs.marker_4 = "#fc424a"  #red
+        clrs.marker_5 = "#ffab00"
+        clrs.marker_off = "#a8a8a8"  #grey
 
-    clrs.colour_gradient = "Viridis"
+        clrs.colour_gradient = "Viridis"
 
 if __name__ == "__main__":
+    title = "Visualizing the NYC Airbnb debate"
+
     # Create data
     df = px.data.iris()
     APP_PATH = str(pathlib.Path(__file__).parent.resolve())
@@ -67,39 +69,34 @@ if __name__ == "__main__":
     # Instantiate custom views
     wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
     mapgroup = MapGroup(df2)
-
     rq3 = RQ3(
         "Number of Airbnbs vs Hotels per neighbourhood",
         "airbnb_counts_per_neighbourhood",
         "hotel_counts_per_neighbourhood",
         df_rq3,
     )
-
     histogram = Histogram(
         "Distribution of number of Airbnbs owned by individual owners in selected area",
         "host_listings_neighbourhood_count",
         df2,
     )
-
     menu =  html.Div(
                         id="settings",
                         className="three columns",
                         children=make_menu_layout(),
                     )
-
     horizontal_bar = HorizontalBar(
         "Number of properties per owner",
         "host_listings_neighbourhood_count",
         df2,
     )
-
     app.layout = html.Div(
         id="app-container",
         children=[
             html.Div(
                 id="header",
                 children=[
-                    html.H4(id="header_title", children="Airbnb in New York"),
+                    html.H4(id="header_title", children=title),
                 ],
             ),
             # graphs
@@ -123,7 +120,6 @@ if __name__ == "__main__":
     )
 
     def update_map_view(map_view, map_title):
-        print("map: ", map_view)
         if map_view == 'fire':
             map_new = "Fire alarms"
         elif map_view == 'co':
@@ -191,8 +187,26 @@ if __name__ == "__main__":
     ):
 
         map_title_new = update_map_view(map_view, title_current)
+
+        # Refresh the page when a different colour scheme is selected
+        if dash.callback_context.triggered_id == "cb_mode":
+            update_colors(cb_mode)
+            map_title_new = update_map_view(map_view, title_current)
+            return (
+                title,
+                None,
+                None,
+                histogram.update(None, local_switch),
+                horizontal_bar.update(None),
+                update_wc(None),
+                mapgroup.update(map_mode=map_view, loc_change=True),
+                rq3.update(None),
+                map_title_new,
+                ""
+            )
+
+        # Update the h_barchart when a property count is selected in the histogram
         if dash.callback_context.triggered_id == "histogram":
-            print(histo_click)
             prop_cnt = histo_click['points'][0]['x']
             return (
                 header_state,
@@ -207,26 +221,9 @@ if __name__ == "__main__":
                 ""                   
             )
 
-        if dash.callback_context.triggered_id == "cb_mode":
-            print(cb_mode)
-            update_colors(cb_mode)
-            map_title_new = update_map_view(map_view, title_current)
-            return (
-                "Airbnb in New York",
-                None,
-                None,
-                histogram.update(None, local_switch),
-                horizontal_bar.update(None),
-                update_wc(None),
-                mapgroup.update(map_mode=map_view, loc_change=True),
-                rq3.update(None),
-                map_title_new,
-                ""
-            )
-
+        # Toggle between the different map views 
         if dash.callback_context.triggered_id == "map_view":
             map_title_new = update_map_view(map_view, title_current)
-            print(scatterplot_current)
             return (
                 header_state,
                 None,
@@ -239,8 +236,10 @@ if __name__ == "__main__":
                 map_title_new,
                 ""
             )
-        print("zip:", zip_code_text)
-        if zip_code_text is not None and zip_code_text is not "":
+
+        # focus on selected neighbourhood based on zipcode
+        if zip_code_text != None and zip_code_text != "":
+            # Check for validity of the zip code and find the neighbourhood if valid
             if (not zip_code_text.isdigit()) or (len(zip_code_text) != 5):
                 return (
                     header_state,
@@ -262,6 +261,7 @@ if __name__ == "__main__":
                     os.path.join(APP_PATH, os.path.join("data", "neighbourhoods.csv")),
                     dtype=str,
                 )
+
                 # Get first neighbourhood with zipcode
                 df_filter = df[df.zipcode == zip_code_text]
                 if df_filter.empty:
@@ -280,7 +280,7 @@ if __name__ == "__main__":
                 else:
                     neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
                     return (
-                        "Airbnb in New York: " + neighbourhood,
+                        f"{title}: {neighbourhood}",
                         None,
                         "",
                         histogram.update(neighbourhood, local_switch),
@@ -291,9 +291,10 @@ if __name__ == "__main__":
                         map_title_new,
                         ""
                     )
+        # Load data for selected neighbourhood 
         elif select_name != "All":
             return (
-                "Airbnb in New York: " + select_name,
+                f"{title}: {select_name}",
                 None,
                 None,
                 histogram.update(select_name, local_switch),
@@ -304,11 +305,11 @@ if __name__ == "__main__":
                 map_title_new,
                 ""
             )
+        # Base case: load visualizations for all neighbourhoods
         else:
-            print("updating", select_name)
             map_title_new = update_map_view(map_view, title_current)
             return (
-                "Airbnb in New York",
+                title,
                 None,
                 None,
                 histogram.update(None, local_switch),

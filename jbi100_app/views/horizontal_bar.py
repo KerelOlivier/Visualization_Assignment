@@ -34,8 +34,6 @@ class HorizontalBar(html.Div):
 
         filter = total.head(20)
 
-        
-
         if neighbourhood is not None:
             if not self.df[self.df.neighbourhood == neighbourhood].empty:
                 filter = self.df[self.df.neighbourhood == neighbourhood]
@@ -47,15 +45,15 @@ class HorizontalBar(html.Div):
 
             filter = filter.merge(total, on="host_id", how="left")
 
-
+            # reduce data to hosts with a given amount of properties
             if prop_cnt >0:
-                print(prop_cnt)
                 filter = filter[filter['total_number'] == prop_cnt]
 
             filter["diff_number"] = filter["total_number"] - filter["local_number"]
 
             filter.sort_values("total_number", inplace=True, ascending=False)
 
+            # create a trace for the properties in the currently selected area
             self.fig.add_trace(
                 go.Bar(
                     y=filter["host_id"],
@@ -64,8 +62,11 @@ class HorizontalBar(html.Div):
                     orientation="h",
                     customdata=filter["total_number"],
                     hovertemplate="%{y} owns %{x} properties in the local area, and %{customdata} in total in NY.<extra></extra>",
+                    marker=dict(color=clrs.marker_1),
                 )
             )
+
+            # create a trace for the properties in different areas
             filter = filter[filter.diff_number > 0]
             self.fig.add_trace(
                 go.Bar(
@@ -75,6 +76,7 @@ class HorizontalBar(html.Div):
                     orientation="h",
                     customdata=filter[["local_number", "total_number"]],
                     hovertemplate="%{y} owns %{customdata[0]} properties in the local area, and %{customdata[1]} in total in NY.<extra></extra>",
+                    marker=dict(color=clrs.marker_2),
                 )
             )
 
@@ -83,7 +85,6 @@ class HorizontalBar(html.Div):
         else:
             filter = total
             if prop_cnt >0:
-                print(prop_cnt)
                 filter = filter[filter['total_number'] == prop_cnt]
 
             filter.sort_values("total_number", inplace=True, ascending=False)
@@ -113,9 +114,8 @@ class HorizontalBar(html.Div):
             bargap=0.8,
             height=max(500, length * 30),
         )
-
+        
         self.fig.update_xaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
         self.fig.update_yaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
-        self.fig.update_traces(marker_color=clrs.marker_5)
 
         return self.fig
