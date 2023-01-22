@@ -71,7 +71,7 @@ class RQ3(html.Div):
                     marker=dict(
                         size=size,
                         color=clrs.marker_off,
-                        line=dict(width=0.5, color="white"),
+                        line=dict(width=1, color="white"),
                     ),
                 )
             ],
@@ -114,7 +114,7 @@ class RQ3(html.Div):
                         self.a + self.b * self.x.max(),
                     ],
                     mode="lines",
-                    line=dict(color=clrs.line_colour, width=0.5),
+                    line=dict(color="white", width=1),
                     showlegend=False,
                     hoverinfo="none",
                 )
@@ -144,7 +144,7 @@ class RQ3(html.Div):
                         a + b * data.airbnb_counts_per_neighbourhood.max(),
                     ],
                     mode="lines",
-                    line=dict(color="rgb(200, 200, 200)", width=0.5),
+                    line=dict(color="white", width=1),
                     showlegend=False,
                     hoverinfo="none",
                 )
@@ -168,7 +168,7 @@ class RQ3(html.Div):
                     marker=dict(
                         size=size,
                         color=clrs.marker_2,
-                        line=dict(width=0.5, color="white"),
+                        line=dict(width=1, color="white"),
                     ),
                 )
             )

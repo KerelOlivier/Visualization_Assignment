@@ -57,7 +57,7 @@ if __name__ == "__main__":
     df2 = pd.read_csv(
         os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv"))
     )
-    # rq3. might replace
+
     df_rq3 = pd.read_csv(
         os.path.join(APP_PATH, os.path.join("data", "hotel_final_grouped.csv"))
     )
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     # Instantiate custom views
     wordcloud = WordsCloud("wordcloud", "Advertising of AirBnbs in selected area", df2)
     mapgroup = MapGroup(df2)
-    # can change it later
+
     rq3 = RQ3(
         "Number of Airbnbs vs Hotels per neighbourhood",
         "airbnb_counts_per_neighbourhood",
