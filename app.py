@@ -120,7 +120,6 @@ if __name__ == "__main__":
     )
 
     def update_map_view(map_view, map_title):
-        print("map: ", map_view)
         if map_view == 'fire':
             map_new = "Fire alarms"
         elif map_view == 'co':
@@ -188,24 +187,9 @@ if __name__ == "__main__":
     ):
 
         map_title_new = update_map_view(map_view, title_current)
-        if dash.callback_context.triggered_id == "histogram":
-            print(histo_click)
-            prop_cnt = histo_click['points'][0]['x']
-            return (
-                header_state,
-                None,
-                None,
-                histogram_current,
-                horizontal_bar.update(select_name, prop_cnt),
-                wordcloud_current,
-                mapgroup.fig,
-                rq3.fig,
-                map_title_new,
-                ""                   
-            )
 
+        # Refresh the page when a different colour scheme is selected
         if dash.callback_context.triggered_id == "cb_mode":
-            print(cb_mode)
             update_colors(cb_mode)
             map_title_new = update_map_view(map_view, title_current)
             return (
@@ -221,9 +205,25 @@ if __name__ == "__main__":
                 ""
             )
 
+        # Update the h_barchart when a property count is selected in the histogram
+        if dash.callback_context.triggered_id == "histogram":
+            prop_cnt = histo_click['points'][0]['x']
+            return (
+                header_state,
+                None,
+                None,
+                histogram_current,
+                horizontal_bar.update(select_name, prop_cnt),
+                wordcloud_current,
+                mapgroup.fig,
+                rq3.fig,
+                map_title_new,
+                ""                   
+            )
+
+        # Toggle between the different map views 
         if dash.callback_context.triggered_id == "map_view":
             map_title_new = update_map_view(map_view, title_current)
-            print(scatterplot_current)
             return (
                 header_state,
                 None,
@@ -236,8 +236,10 @@ if __name__ == "__main__":
                 map_title_new,
                 ""
             )
-        print("zip:", zip_code_text)
+
+        # focus on selected neighbourhood based on zipcode
         if zip_code_text != None and zip_code_text != "":
+            # Check for validity of the zip code and find the neighbourhood if valid
             if (not zip_code_text.isdigit()) or (len(zip_code_text) != 5):
                 return (
                     header_state,
@@ -259,6 +261,7 @@ if __name__ == "__main__":
                     os.path.join(APP_PATH, os.path.join("data", "neighbourhoods.csv")),
                     dtype=str,
                 )
+
                 # Get first neighbourhood with zipcode
                 df_filter = df[df.zipcode == zip_code_text]
                 if df_filter.empty:
@@ -288,6 +291,7 @@ if __name__ == "__main__":
                         map_title_new,
                         ""
                     )
+        # Load data for selected neighbourhood 
         elif select_name != "All":
             return (
                 f"{title}: {select_name}",
@@ -301,8 +305,8 @@ if __name__ == "__main__":
                 map_title_new,
                 ""
             )
+        # Base case: load visualizations for all neighbourhoods
         else:
-            print("updating", select_name)
             map_title_new = update_map_view(map_view, title_current)
             return (
                 title,
