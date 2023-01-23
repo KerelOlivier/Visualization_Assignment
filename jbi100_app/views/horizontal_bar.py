@@ -97,12 +97,12 @@ class HorizontalBar(html.Div):
                     y=filter["host_id"],
                     orientation="h",
                     hovertemplate="%{y} owns %{x} properties in total in NY.<extra></extra>",
+                    
                 )
             )
 
         length = len(filter)
 
-        self.fig.update_yaxes(tickmode="linear")
 
         # update axis titles
         self.fig.update_layout(
@@ -112,7 +112,7 @@ class HorizontalBar(html.Div):
             plot_bgcolor=clrs.card_colour,
             yaxis=dict(autorange="reversed"),
             bargap=0.8,
-            height=max(500, length * 30),
+            height=max(500, length*50),
         )
         
         self.fig.update_xaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
