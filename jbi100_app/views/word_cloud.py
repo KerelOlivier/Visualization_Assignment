@@ -21,6 +21,12 @@ class WordsCloud(html.Div):
         )
 
     def update(self, neighbourhood=None):
+        """
+        Updates the word cloud based on the current settings,
+        taking into account Steven's power law
+
+        :param neighbourhood: the neighbourhood we are looking at
+        """
 
         # get the relevant data
         if neighbourhood is not None:
@@ -35,8 +41,9 @@ class WordsCloud(html.Div):
         t = self.get_text(filter).split()
         freqs = nltk.FreqDist(t)
         x = freqs.most_common(30)
-        ## Applying Steven's power law
-        boo = {k: v ** (1 / 0.7) for k, v in x}
+
+        # Applying Steven's power law
+        spl_frequencies = {k: v ** (1 / 0.7) for k, v in x}
 
         # Scale brightness from 20-100% for readability
         min_value = min(x,key=lambda item:item[1])[1]
@@ -50,26 +57,32 @@ class WordsCloud(html.Div):
             height=360,
             color_func=self.my_tf_color_func(color),
         )
-        wc.fit_words(boo)
+        wc.fit_words(spl_frequencies)
 
         return wc.to_image()
 
     def get_text(self, df):
+        """
+        Takes all the text in the current data from the "name" attribute
+        and removes all irrelevant words and symbols
+
+        :param df: the current data
+        """
 
         # join all names in the data together
         text = " ".join(df["name"].astype(str))
 
         # remove stop words, special symbols, punctuation, and extra spaces
-        pattern = re.compile(r"\b(" + r"|".join(stopwords.words("english")) + r")\b\s*")
-        new_text = pattern.sub("", text)
-        x = re.sub("w[^A-Za-z0-9 \n\.]", "", new_text)
-        final_text = re.sub("[^A-Za-z0-9 \n\.]", "", x)
-        really_final_text = re.sub(" +", " ", final_text)
+        stopwords = re.compile(r"\b(" + r"|".join(stopwords.words("english")) + r")\b\s*")
+        new_text = stopwords.sub("", text)
+        without_symbols = re.sub("w[^A-Za-z0-9 \n\.]", "", new_text)
+        x = re.sub("[^A-Za-z0-9 \n\.]", "", without_symbols)
+        without_extra_spaces = re.sub(" +", " ", x)
 
         # finally, set everything to lowercase
-        really_final_text = really_final_text.lower()
+        without_extra_spaces = without_extra_spaces.lower()
 
-        return really_final_text
+        return without_extra_spaces
 
     def my_tf_color_func(self, dictionary):
         def my_tf_color_func_inner(

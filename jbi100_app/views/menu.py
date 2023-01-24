@@ -54,6 +54,8 @@ def generate_control_card():
                 options=[{"label": i, "value": i} for i in neighbourhood_list],
                 value=neighbourhood_list[0],
             ),
+            # The radiobuttons which indicate which view of the map
+            # we are looking at
             html.Label("Select a view of the map:"),
             dcc.RadioItems(
                 id="map_view",
@@ -69,8 +71,8 @@ def generate_control_card():
             dcc.RadioItems(
                 id="cb_mode",
                 options=[
-                    {'label': 'disable', 'value': 'default'}, 
-                    {'label': 'enabled', 'value': 'cb_mode'},
+                    {'label': 'Disabled', 'value': 'default'}, 
+                    {'label': 'Enabled', 'value': 'cb_mode'},
                 ],
                 value='default'
 

@@ -120,16 +120,23 @@ if __name__ == "__main__":
     )
 
     def update_map_view(map_view, map_title):
+        """
+        Updates the current map we are looking at
+        """
         if map_view == 'fire':
             map_new = "Fire alarms"
         elif map_view == 'co':
             map_new = "Carbon monoxide monitors"
-        # elif map_view == 2:
         else:
             map_new = 'Noise complaints density and Airbnb locations'
         return map_new
 
     def update_wc(neighbourhood):
+        """
+        Updates the word cloud by creating one,
+        turning it into an image, and decoding it,
+        since wordcloud doesn't work with Dash
+        """
         img = BytesIO()
         wordcloud.update(neighbourhood).save(img, format="PNG")
         return "data:image/png;base64,{}".format(

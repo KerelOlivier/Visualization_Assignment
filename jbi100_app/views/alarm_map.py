@@ -5,12 +5,15 @@ import jbi100_app.views.colors as clrs
 
 class Map(html.Div):
     def __init__(self, name, df):
+
+        # set the initial variables
         self.html_id = name.lower().replace(" ", "-")
         self.df = df
         self.zoom = 1
         self.nbh = None
         self.colours = [clrs.marker_2, clrs.marker_4]
         self.mode = 0
+
         # Equivalent to `html.Div([...])`
         super().__init__(
             className="graph_card",
@@ -20,10 +23,17 @@ class Map(html.Div):
             ],
         )
         
-        
-    
 
     def update(self, mode=None, loc_change=False, colours=[clrs.marker_2, clrs.marker_4], neighbourhood=None):
+        """
+        Updates the scattermap for fire alarms and co monitors
+
+        :param mode: the mode of the map (fire or co)
+        :param loc_change: whether the neighbourhood parameter should be taken into account
+        :param colours: the colours to use for the markers
+        :param neighbourhood: the neighbourhood we want to look at (None if all of NYC)
+        """
+        
         colours=[clrs.marker_2, clrs.marker_4]
         self.fig = go.Figure()
 
@@ -51,6 +61,7 @@ class Map(html.Div):
             "Staten Island",
             "Queens"
         }
+
         # we also need to know the zoom level and center
         if self.nbh is None:
             zoom = 9
@@ -60,14 +71,10 @@ class Map(html.Div):
             else:
                 zoom = 14
 
-
-
         center_lat = filter["latitude"].mean()
         center_lon = filter["longitude"].mean()
 
         center = {"lat":center_lat, "lon":center_lon}
-
-        #print("step 2:", time.perf_counter()
 
         # get correct colours
         marker_colours = dict(zip([True,False], colours))
@@ -81,7 +88,7 @@ class Map(html.Div):
             filter["colour"] = filter["has_co_monitor"].replace(to_replace=marker_colours)
             hover_txt = filter.has_co_monitor.astype(str)
 
-        # now create the scattermap (this is the slowest thing)
+        # now create the scattermap
         self.fig.add_trace(go.Scattermapbox(
                             lat=filter.latitude,
                             lon=filter.longitude,
