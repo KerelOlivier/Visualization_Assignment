@@ -55,6 +55,13 @@ def update_colors(theme="default"):
 if __name__ == "__main__":
     title = "Visualizing the NYC Airbnb debate"
 
+    #current neighbourhood
+    current_neighbourhood = None
+    # To make sure it's initialized
+    print("current neighbourhood", current_neighbourhood)
+    # Update title based on drop down
+
+
     # Create data
     df = px.data.iris()
     APP_PATH = str(pathlib.Path(__file__).parent.resolve())
@@ -147,12 +154,13 @@ if __name__ == "__main__":
 
 
 
-    # Update title based on drop down
+
     @app.callback(
         [
             Output("header_title", "children"),
             Output("error", "children"),
             Output("zip_code_text", "value"),
+            Output("select_neigh", "value"),
             Output(histogram.html_id, "figure"),
             Output(horizontal_bar.html_id, "figure"),
             Output(wordcloud.html_id, "src"),
@@ -179,7 +187,6 @@ if __name__ == "__main__":
         ],
     )
 
-
     def update_neighbourhoods(
         select_name,
         zip_code_text,
@@ -194,6 +201,27 @@ if __name__ == "__main__":
         scatterplot_current,
         title_current,
     ):
+        # determine if there is a predetermined neighbourhood
+        # We can't use a variable because dash is stateless and maintains
+        # Sessions using cookies, which we can't easily access and process
+        if select_name != None:
+            current_neighbourhood = select_name
+        elif zip_code_text != None and zip_code_text != "" and zip_code_text.isdigit() and len(zip_code_text) == 5:
+            # Load data
+            APP_PATH = str(pathlib.Path(__file__).parent.resolve())
+            df = pd.read_csv(
+                os.path.join(APP_PATH, os.path.join("data", "neighbourhoods.csv")),
+                dtype=str,
+            )
+            df_filter = df[df.zipcode == zip_code_text]
+            if(len(df_filter) == 0):
+                current_neighbourhood = None
+            else:
+                current_neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
+        else:
+            current_neighbourhood = None
+        
+
 
         map_title_new = update_map_view(map_view, title_current)
 
@@ -204,11 +232,12 @@ if __name__ == "__main__":
             return (
                 title,
                 None,
-                None,
-                histogram.update(None, local_switch),
-                horizontal_bar.update(None),
-                update_wc(None),
-                mapgroup.update(map_mode=map_view, loc_change=True),
+                zip_code_text,
+                select_name,
+                histogram.update(current_neighbourhood, local_switch),
+                horizontal_bar.update(neighbourhood=current_neighbourhood),
+                update_wc(current_neighbourhood),
+                mapgroup.update(map_mode=map_view, neighbourhood=current_neighbourhood),
                 rq3.update(None),
                 map_title_new,
                 ""
@@ -220,9 +249,10 @@ if __name__ == "__main__":
             return (
                 header_state,
                 None,
-                None,
+                zip_code_text,
+                select_name,
                 histogram_current,
-                horizontal_bar.update(select_name, prop_cnt),
+                horizontal_bar.update(current_neighbourhood, prop_cnt),
                 wordcloud_current,
                 mapgroup.fig,
                 rq3.fig,
@@ -237,10 +267,11 @@ if __name__ == "__main__":
                 header_state,
                 None,
                 zip_code_text,
+                select_name,
                 histogram_current,
                 hb_current,
                 wordcloud_current,
-                mapgroup.update(map_view, neighbourhood=select_name, loc_change=True),
+                mapgroup.update(map_view, neighbourhood=current_neighbourhood, loc_change=True),
                 rq3.fig,
                 map_title_new,
                 ""
@@ -254,6 +285,7 @@ if __name__ == "__main__":
                     header_state,
                     "The value entered is not a valid zip code.",
                     zip_code_text,
+                    select_name,
                     histogram_current,
                     hb_current,
                     wordcloud_current,
@@ -277,7 +309,8 @@ if __name__ == "__main__":
                     return (
                         header_state,
                         "The value entered does not correspond to a New York neighbourhood.",
-                        zip_code_text,
+                        "",
+                        select_name,
                         histogram_current,
                         hb_current,
                         wordcloud_current,
@@ -287,30 +320,33 @@ if __name__ == "__main__":
                         ""
                     )
                 else:
-                    neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
+                    current_neighbourhood = df_filter[["neighbourhood"]].iloc[0][0]
                     return (
-                        f"{title}: {neighbourhood}",
+                        f"{title}: {current_neighbourhood}",
                         None,
-                        "",
-                        histogram.update(neighbourhood, local_switch),
-                        horizontal_bar.update(neighbourhood),  
-                        update_wc(neighbourhood),                    
-                        mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=neighbourhood),
-                        rq3.update(neighbourhood),
+                        zip_code_text,
+                        current_neighbourhood,
+                        histogram.update(current_neighbourhood, local_switch),
+                        horizontal_bar.update(current_neighbourhood),  
+                        update_wc(current_neighbourhood),                    
+                        mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=current_neighbourhood),
+                        rq3.update(current_neighbourhood),
                         map_title_new,
                         ""
                     )
         # Load data for selected neighbourhood 
         elif select_name != "All":
+            current_neighbourhood = select_name
             return (
                 f"{title}: {select_name}",
                 None,
                 None,
-                histogram.update(select_name, local_switch),
-                horizontal_bar.update(select_name),
-                update_wc(select_name),                
-                mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=select_name),
-                rq3.update(select_name),
+                select_name,
+                histogram.update(current_neighbourhood, local_switch),
+                horizontal_bar.update(current_neighbourhood),
+                update_wc(current_neighbourhood),                
+                mapgroup.update(map_mode=map_view, loc_change=True, neighbourhood=current_neighbourhood),
+                rq3.update(current_neighbourhood),
                 map_title_new,
                 ""
             )
@@ -321,6 +357,7 @@ if __name__ == "__main__":
                 title,
                 None,
                 None,
+                select_name,
                 histogram.update(None, local_switch),
                 horizontal_bar.update(None),
                 update_wc(None),

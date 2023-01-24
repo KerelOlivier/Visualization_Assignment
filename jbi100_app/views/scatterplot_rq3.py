@@ -34,7 +34,7 @@ class RQ3(html.Div):
 
         # equivalent to `html.Div([...])`
         super().__init__(
-            className="sgraph_card",
+            className="graph_card",
             children=[html.H6(name), dcc.Graph(id=self.html_id)],
         )
 
