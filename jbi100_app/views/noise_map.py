@@ -84,7 +84,7 @@ class NoiseMap(html.Div):
         self.scatter = px.scatter_mapbox(filter,
                                         lat="latitude",lon="longitude",
                                         hover_name="name",
-                                        color_discrete_sequence=[clrs.marker_4],
+                                        color_discrete_sequence=[clrs.marker_1],
                                         hover_data={'latitude':False, 
                                                     'longitude':False},
                                         mapbox_style="carto-darkmatter")

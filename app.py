@@ -25,30 +25,32 @@ def update_colors(theme="default"):
         clrs.card_colour = "#212121"
         clrs.txt_colour = "#f1f1f1"
         clrs.line_colour = "#424242"
-        #
-        clrs.marker_1 = "#56b4e9"
-        clrs.marker_2 = "#009e73"  #green
-        clrs.marker_3 = "#f0e442"
-        clrs.marker_4 = "#d55e00"  #red
-        clrs.marker_5 = "#cc79a7"
-        clrs.marker_off = "#a8a8a8"  #grey
+
+        clrs.marker_1 = "#73BFB8"   # Teal
+        clrs.marker_2 = "#3DA5D9"   # Light blue
+        clrs.marker_3 = "#EA7317"   # Orange
+        clrs.marker_4 = "#FEC601"   # Yellow
+        clrs.marker_5 = "#2364AA"   # Dark blue
+        clrs.marker_off = "#a8a8a8" # Grey
 
         clrs.colour_gradient = "Viridis"
+        clrs.wc_colour_func = clrs.my_tf_color_func_cb
 
     else: #default colors
         clrs.bg_colour = "#121212"
         clrs.card_colour = "#212121"
         clrs.txt_colour = "#f1f1f1"
         clrs.line_colour = "#424242"
-        #
-        clrs.marker_1 = "#0090e7"
-        clrs.marker_2 = "#00d25b"  #green
-        clrs.marker_3 = "#8f5fe8"
-        clrs.marker_4 = "#fc424a"  #red
-        clrs.marker_5 = "#ffab00"
-        clrs.marker_off = "#a8a8a8"  #grey
+
+        clrs.marker_1 = "#548C2F"   # Green
+        clrs.marker_2 = "#A8D5E2"   # Light blue
+        clrs.marker_3 = "#F9A620"   # Orange
+        clrs.marker_4 = "#FFD449"   # Yellow
+        clrs.marker_5 = "#A8D5E2"   # Dark green
+        clrs.marker_off = "#a8a8a8" # Grey
 
         clrs.colour_gradient = "Viridis"
+        clrs.wc_colour_func = clrs.my_tf_color_func
 
 if __name__ == "__main__":
     title = "Visualizing the NYC Airbnb debate"

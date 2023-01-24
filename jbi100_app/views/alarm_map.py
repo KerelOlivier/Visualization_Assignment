@@ -11,7 +11,7 @@ class Map(html.Div):
         self.df = df
         self.zoom = 1
         self.nbh = None
-        self.colours = [clrs.marker_2, clrs.marker_4]
+        self.colours = [clrs.marker_2, clrs.marker_3]
         self.mode = 0
 
         # Equivalent to `html.Div([...])`
@@ -24,7 +24,8 @@ class Map(html.Div):
         )
         
 
-    def update(self, mode=None, loc_change=False, colours=[clrs.marker_2, clrs.marker_4], neighbourhood=None):
+
+    def update(self, mode=None, loc_change=False, colours=[clrs.marker_2, clrs.marker_3], neighbourhood=None):
         """
         Updates the scattermap for fire alarms and co monitors
 
@@ -33,8 +34,7 @@ class Map(html.Div):
         :param colours: the colours to use for the markers
         :param neighbourhood: the neighbourhood we want to look at (None if all of NYC)
         """
-        
-        colours=[clrs.marker_2, clrs.marker_4]
+        colours=[clrs.marker_2, clrs.marker_3]
         self.fig = go.Figure()
 
         # we are now changing the location to use

@@ -48,14 +48,18 @@ class WordsCloud(html.Div):
         # Scale brightness from 20-100% for readability
         min_value = min(x,key=lambda item:item[1])[1]
         max_value = max(x,key=lambda item:item[1])[1]
-        color = {k: int(round((v - min_value) * (100-20)/(max_value-min_value) + 20, 0)) for k, v in x}
+        diff = max_value - min_value
+        #protect against division by zero
+        if(diff == 0):
+            diff = 0.000001
+        color = {k: int(round((v - min_value) * (100-20)/(diff) + 20, 0)) for k, v in x}
 
         # create a wordcloud
         wc = WordCloud(
             background_color=clrs.card_colour,
             width=300,
             height=360,
-            color_func=self.my_tf_color_func(color),
+            color_func=clrs.my_tf_color_func(color),
         )
         wc.fit_words(spl_frequencies)
 
@@ -83,11 +87,3 @@ class WordsCloud(html.Div):
         without_extra_spaces = without_extra_spaces.lower()
 
         return without_extra_spaces
-
-    def my_tf_color_func(self, dictionary):
-        def my_tf_color_func_inner(
-            word, random_state=None, **kwargs
-        ):
-            return "hsl(202, 100%%, %d%%)" % (dictionary[word])
-
-        return my_tf_color_func_inner
