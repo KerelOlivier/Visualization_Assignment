@@ -59,7 +59,7 @@ if __name__ == "__main__":
     df2 = pd.read_csv(
         os.path.join(APP_PATH, os.path.join("data", "airbnb_open_data_full_clean.csv"))
     )
-
+    # for scatterplot_rq3.py
     df_rq3 = pd.read_csv(
         os.path.join(APP_PATH, os.path.join("data", "hotel_final_grouped.csv"))
     )
