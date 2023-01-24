@@ -21,7 +21,7 @@ class Histogram(html.Div):
                         html.Td("Count of local properties owned by local owners"),
                         html.Td(
                             daq.BooleanSwitch(
-                                id="local_switch", on=False, color=clrs.marker_3
+                                id="local_switch", on=False, color=clrs.marker_1
                             )
                         ),
                         html.Td("Count of all properties owned by local owners"),

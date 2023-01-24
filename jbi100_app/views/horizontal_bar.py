@@ -76,7 +76,7 @@ class HorizontalBar(html.Div):
                     orientation="h",
                     customdata=diff_areas[["local_number", "total_number"]],
                     hovertemplate="%{y} owns %{customdata[0]} properties in the local area, and %{customdata[1]} in total in NY.<extra></extra>",
-                    marker=dict(color=clrs.marker_2),
+                    marker=dict(color=clrs.marker_5),
                 )
             )
 
@@ -101,7 +101,7 @@ class HorizontalBar(html.Div):
                     y=filter["host_id"],
                     orientation="h",
                     hovertemplate="%{y} owns %{x} properties in total in NY.<extra></extra>",
-                    
+                    marker=dict(color=clrs.marker_1),
                 )
             )
 
