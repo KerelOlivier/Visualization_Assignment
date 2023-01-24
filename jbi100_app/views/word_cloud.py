@@ -73,8 +73,8 @@ class WordsCloud(html.Div):
         text = " ".join(df["name"].astype(str))
 
         # remove stop words, special symbols, punctuation, and extra spaces
-        stopwords = re.compile(r"\b(" + r"|".join(stopwords.words("english")) + r")\b\s*")
-        new_text = stopwords.sub("", text)
+        stpwds = re.compile(r"\b(" + r"|".join(stopwords.words("english")) + r")\b\s*")
+        new_text = stpwds.sub("", text)
         without_symbols = re.sub("w[^A-Za-z0-9 \n\.]", "", new_text)
         x = re.sub("[^A-Za-z0-9 \n\.]", "", without_symbols)
         without_extra_spaces = re.sub(" +", " ", x)
