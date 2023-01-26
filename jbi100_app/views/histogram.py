@@ -32,10 +32,14 @@ class Histogram(html.Div):
         )
 
     def update(self, neighbourhood=None, local_switch=""):
+
         # Get rid of upper margin
         self.fig = go.Figure(layout=go.Layout(margin={"t": 0}))
 
+        # Filter to relevant neighbourhood if selected
         if neighbourhood is not None:
+
+            # Check if we are showing properties in local area or all NYC
             local_switch = "{}".format(local_switch)
             if local_switch == "True":
                 if not self.df[self.df.neighbourhood == neighbourhood].empty:
@@ -49,6 +53,7 @@ class Histogram(html.Div):
                 filter = self.df[self.df.host_id.isin(host_ids)]
                 filter = filter.groupby("host_id")["id"].count().reset_index()
                 filter.rename(columns={"id": self.feature}, inplace=True)
+
             else:
                 filter = self.df[
                     (self.df.neighbourhood_group == neighbourhood)
@@ -61,6 +66,7 @@ class Histogram(html.Div):
 
         values = filter[self.feature]
 
+        # Histogram of number of properties owned by local Airbnb hosts
         self.fig.add_trace(
             go.Histogram(
                 histfunc="count",
@@ -73,15 +79,6 @@ class Histogram(html.Div):
         self.fig.update_xaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
         self.fig.update_yaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
 
-        # highlight points with selection other graph
-        # if selected_data is None:
-        #     selected_index = self.df.index  # show all
-        # else:
-        #     selected_index = [  # show only selected indices
-        #         x.get('pointIndex', None)
-        #         for x in selected_data['points']
-        #     ]
-
         # update axis titles
         self.fig.update_layout(
             xaxis_title="Number of Airbnb properties owned in selected area",
@@ -90,6 +87,7 @@ class Histogram(html.Div):
             plot_bgcolor=clrs.card_colour,
         )
 
+        # If no Airbnb hosts own more than 10 Airbnbs then still fix range so not too small
         if filter[self.feature].max() < 10:
             self.fig.update_layout(xaxis_range=[0, 10])
 

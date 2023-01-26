@@ -196,7 +196,7 @@ class RQ3(html.Div):
                     mode="markers",
                     marker=dict(
                         size=size,
-                        color=clrs.marker_1,
+                        color=clrs.marker_3,
                         line=dict(width=1, color="white"),
                     ),
                 )

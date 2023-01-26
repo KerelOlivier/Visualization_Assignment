@@ -28,12 +28,11 @@ class HorizontalBar(html.Div):
         # Get rid of upper margin
         self.fig = go.Figure(layout=go.Layout(margin={"t": 0}))
 
-        # Number of properties owned by landlord
+        # Number of properties owned by landlord in all NY
         total = self.df.groupby("host_id")["id"].count().reset_index()
-        total.rename(columns={"id": "total_number"}, inplace=True)
+        total.rename(columns={"id": "total_number"}, inplace=True)      
 
-        filter = total.head(20)
-
+        # If specific neighbourhood selected then filter to this
         if neighbourhood is not None:
             if not self.df[self.df.neighbourhood == neighbourhood].empty:
                 filter = self.df[self.df.neighbourhood == neighbourhood]
@@ -45,10 +44,11 @@ class HorizontalBar(html.Div):
 
             filter = filter.merge(total, on="host_id", how="left")
 
-            # reduce data to hosts with a given amount of properties
-            if prop_cnt >0:
+            # If certain count is selected in other chart then filter to this
+            if prop_cnt > 0:
                 filter = filter[filter['total_number'] == prop_cnt]
 
+            # Get number of properties in rest of city
             filter["diff_number"] = filter["total_number"] - filter["local_number"]
 
             filter.sort_values("total_number", inplace=True, ascending=False)
@@ -67,14 +67,14 @@ class HorizontalBar(html.Div):
             )
 
             # create a trace for the properties in different areas
-            filter = filter[filter.diff_number > 0]
+            diff_areas = filter[filter.diff_number > 0]
             self.fig.add_trace(
                 go.Bar(
-                    y=filter["host_id"],
-                    x=filter["diff_number"],
+                    y=diff_areas["host_id"],
+                    x=diff_areas["diff_number"],
                     name="other areas",
                     orientation="h",
-                    customdata=filter[["local_number", "total_number"]],
+                    customdata=diff_areas[["local_number", "total_number"]],
                     hovertemplate="%{y} owns %{customdata[0]} properties in the local area, and %{customdata[1]} in total in NY.<extra></extra>",
                     marker=dict(color=clrs.marker_5),
                 )
@@ -83,8 +83,12 @@ class HorizontalBar(html.Div):
             self.fig.update_layout(barmode="stack")
 
         else:
+            
+            # Plot all Airbnb hosts if no neighbourhood selected
             filter = total
-            if prop_cnt >0:
+
+            # If certain count is selected in other chart then filter to this
+            if prop_cnt > 0:
                 filter = filter[filter['total_number'] == prop_cnt]
 
             filter.sort_values("total_number", inplace=True, ascending=False)
@@ -103,6 +107,8 @@ class HorizontalBar(html.Div):
 
         length = len(filter)
 
+        # Show all Airbnb host IDs
+        self.fig.update_yaxes(tickmode="linear")
 
         # update axis titles
         self.fig.update_layout(
@@ -111,11 +117,14 @@ class HorizontalBar(html.Div):
             paper_bgcolor=clrs.card_colour,
             plot_bgcolor=clrs.card_colour,
             yaxis=dict(autorange="reversed"),
-            bargap=0.8,
-            height=max(500, length*50),
+            bargap=0.7,
+            height=max(500, length*30),
         )
         
         self.fig.update_xaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
         self.fig.update_yaxes(fixedrange=True, gridcolor=clrs.line_colour, color=clrs.txt_colour)
 
         return self.fig
+
+
+
