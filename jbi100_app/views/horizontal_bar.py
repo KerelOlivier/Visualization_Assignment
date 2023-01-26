@@ -81,6 +81,8 @@ class HorizontalBar(html.Div):
             )
 
             self.fig.update_layout(barmode="stack")
+            #Update legend font color
+            self.fig.update_layout(legend=dict(font=dict(color=clrs.txt_colour)))
 
         else:
             
