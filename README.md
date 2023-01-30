@@ -1,19 +1,15 @@
-# JBI100-example-app
+# JBI100 - Visualising the NYC Airbnb debate
 
-## About this app
-
-You can use this as a basic template for your JBI100 visualization project.
+This project is a dashboard to support the debate about the impact of AirBnbs in New York City. It is made for the Course JBI100-Visualization at the TU Eindhoven. 
 
 ## Requirements
 
-* Python 3 (add it to your path (system variables) to make sure you can access it from the command prompt)
-* Git (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* Python 3
 
 ## How to run this app
 
 We suggest you to create a virtual environment for running this app with Python 3. Clone this repository 
 and open your terminal/command prompt in the root folder.
-
 
 open the command prompt
 cd into the folder where you want to save the files and run the following commands:
@@ -62,8 +58,5 @@ Run this app locally with:
 ```
 > python app.py
 ```
+Initial loading of the webpage might take a bit due to a large dataset being rendered. Performance will improve when selecting a neighbourhood or neighbourhood group.
 You will get a http link, open this in your browser to see the results. You can edit the code in any editor (e.g. Visual Studio Code) and if you save it you will see the results in the browser.
-
-## Resources
-
-* [Dash](https://dash.plot.ly/)
