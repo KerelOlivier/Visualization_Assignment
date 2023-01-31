@@ -2,7 +2,7 @@ from dash import dcc, html
 import plotly.graph_objects as go
 import time
 import jbi100_app.views.colors as clrs
-
+import numpy as np
 class Map(html.Div):
     def __init__(self, name, df):
 
@@ -80,12 +80,16 @@ class Map(html.Div):
         marker_colours = dict(zip([True,False], colours))
 
         if self.mode == 'fire':
-            # fire alarm node         
-            filter["colour"] = filter["has_fire_alarm"].replace(to_replace=marker_colours)
+            # fire alarm node                     
+            # filter["colour"] = filter["has_fire_alarm"].replace(to_replace=marker_colours)
+            filter.loc[filter["has_fire_alarm"] == True, 'colour'] = colours[0]
+            filter.loc[filter["has_fire_alarm"] == False, 'colour'] = colours[1]
+            
             hover_txt = filter.has_fire_alarm.astype(str)
         elif self.mode == 'co':
             # co monitor mode
-            filter["colour"] = filter["has_co_monitor"].replace(to_replace=marker_colours)
+            filter.loc[filter["has_co_monitor"] == True, 'colour'] = colours[0]
+            filter.loc[filter["has_co_monitor"] == False, 'colour'] = colours[1]
             hover_txt = filter.has_co_monitor.astype(str)
 
         # now create the scattermap
