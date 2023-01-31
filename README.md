@@ -12,13 +12,9 @@ We suggest you to create a virtual environment for running this app with Python 
 and open your terminal/command prompt in the root folder.
 
 open the command prompt
-cd into the folder where you want to save the files and run the following commands:
-
+Unzip the folder, open the command prompt in the folder and run the following command:
 ```
-> git clone https://gitlab.tue.nl/s146523/jbi100-2021-2022.git
-> cd jbi100-2021-2022
 > python -m venv venv
-
 ```
 If python is not recognized use python3 instead
 
@@ -60,3 +56,5 @@ Run this app locally with:
 ```
 Initial loading of the webpage might take a bit due to a large dataset being rendered. Performance will improve when selecting a neighbourhood or neighbourhood group.
 You will get a http link, open this in your browser to see the results. You can edit the code in any editor (e.g. Visual Studio Code) and if you save it you will see the results in the browser.
+
+We used the provided template as a base and made all other code ourselves.
